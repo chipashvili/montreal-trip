@@ -1,0 +1,6 @@
+# Local Claude Code settings & dev tooling (machine-specific, not for deployment)
+.claude/settings.local.json
+.claude/launch.json
+
+# OS cruft
+.DS_Store

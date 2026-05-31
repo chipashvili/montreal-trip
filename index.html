@@ -135,12 +135,20 @@
           Our Airbnb sits in the heart of the Plateau, at the corner of
           <span class="font-semibold text-charcoal">Rue Saint-Denis &amp; Ave Duluth</span> — walkable to everything.
         </p>
-        <a href="https://www.google.com/maps/search/?api=1&query=Rue+Saint-Denis+%26+Avenue+Duluth+Montreal"
-           target="_blank" rel="noopener"
-           class="mt-5 inline-flex items-center justify-center gap-2 text-sm font-semibold px-5 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">
-          Open in Google Maps
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </a>
+        <div class="mt-5 flex flex-col gap-2">
+          <a href="https://www.airbnb.com/rooms/51517224?unique_share_id=653f028e-6058-48f3-972b-042d15b7e366&viralityEntryPoint=1&s=76&source_impression_id=p3_1780267880_P3ILZ7nG0kyOlRPV"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center justify-center gap-2 text-sm font-semibold px-5 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">
+            View Airbnb Listing
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Rue+Saint-Denis+%26+Avenue+Duluth+Montreal"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center justify-center gap-2 text-sm font-semibold px-5 py-3 rounded-full border border-charcoal/20 text-charcoal hover:bg-linen2 transition">
+            <svg class="w-4 h-4 text-sageDeep" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Directions
+          </a>
+        </div>
       </div>
 
       <!-- Splitwise -->
@@ -164,23 +172,9 @@
         <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">The Crew</p>
         <div class="font-display text-6xl font-600 leading-none">14</div>
         <p class="text-sm text-linen/70 mt-3 leading-relaxed">
-          guys, three ride groups. Keep your team together and the city moves fast.
+          guys, one long weekend. Tap any stop below for directions and keep the crew moving.
         </p>
       </div>
-    </div>
-
-    <!-- Uber Teams -->
-    <div class="fade-up bg-linen2 rounded-3xl border border-charcoal/10 p-7 md:p-9">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-2xl bg-charcoal flex items-center justify-center">
-          <svg class="w-5 h-5 text-linen" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8m0 0v8m0-8l-8 8M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-        </div>
-        <div>
-          <h3 class="font-display text-2xl font-600 text-ink leading-tight">Uber Ride Groups</h3>
-          <p class="text-xs text-slate">Same team rides together — split the fare, never wait.</p>
-        </div>
-      </div>
-      <div id="ride-groups" class="grid sm:grid-cols-3 gap-4"><!-- injected by JS --></div>
     </div>
   </section>
 
@@ -251,7 +245,7 @@
         <p class="text-sm text-linen/60 mt-3 max-w-md mx-auto">
           One shared album. Tap, upload, contribute. What happens in Montreal goes in the vault.
         </p>
-        <a href="https://photos.google.com/" target="_blank" rel="noopener"
+        <a href="https://photos.app.goo.gl/WhroFmpNjWEcaWoQ7" target="_blank" rel="noopener"
            class="mt-7 inline-flex items-center justify-center gap-2 text-sm font-semibold px-7 py-3.5 rounded-full bg-sage text-charcoal hover:bg-linen transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           Open Shared Album
@@ -350,50 +344,28 @@
   })();
 
   /* -------------------------------------------------------------
-     2. UBER RIDE GROUPS
+     2. ITINERARY DATA + RENDER
      ------------------------------------------------------------- */
-  const RIDE_GROUPS = [
-    { team: 'Team A', tone: 'sage',  members: ['Jimmy', 'Marcus', 'Dev', 'Ty', 'Sean'] },
-    { team: 'Team B', tone: 'slate', members: ['Will', 'Andre', 'Pat', 'Greg', 'Luis'] },
-    { team: 'Team C', tone: 'char',  members: ['Nate', 'Omar', 'Chris', 'Hassan'] },
-  ];
-  (function () {
-    const tones = {
-      sage:  'bg-sage/15 border-sageDeep/30',
-      slate: 'bg-slate/10 border-slate/30',
-      char:  'bg-charcoal/5 border-charcoal/20',
-    };
-    document.getElementById('ride-groups').innerHTML = RIDE_GROUPS.map(g => `
-      <div class="rounded-2xl border ${tones[g.tone]} p-5">
-        <div class="flex items-center justify-between mb-3">
-          <h4 class="font-display text-xl font-600 text-ink">${g.team}</h4>
-          <span class="text-xs font-semibold text-slate">${g.members.length} riders</span>
-        </div>
-        <ul class="space-y-1.5">
-          ${g.members.map(m => `
-            <li class="flex items-center gap-2 text-sm text-charcoal">
-              <span class="w-1.5 h-1.5 rounded-full bg-sageDeep"></span>${m}
-            </li>`).join('')}
-        </ul>
-      </div>`).join('');
-  })();
-
-  /* -------------------------------------------------------------
-     3. ITINERARY DATA + RENDER
-     ------------------------------------------------------------- */
+  const MAPS = 'https://www.google.com/maps/search/?api=1&query=';
+  // Each MAIN event has a `map` Google Maps link rendered as a small pin icon
+  // next to the location. Alternative options intentionally have none.
   const ITINERARY = [
     {
       day: 'Thursday', date: 'August 13', tag: 'Arrival',
       events: [
         { time: '2:00 PM',  title: 'Arrival & Check-in', loc: 'Airbnb · St-Denis & Duluth',
-          desc: 'Drop bags, claim beds (first come first served), regroup on the balcony.' },
+          desc: 'Drop bags, claim beds (first come first served), regroup on the balcony.',
+          map: MAPS + 'Rue+Saint-Denis+%26+Avenue+Duluth+Montreal' },
         { time: '4:30 PM',  title: 'Late Lunch', loc: "Schwartz's Deli / La Banquise",
-          desc: 'Smoked meat sandwiches or the legendary poutine. Fuel for the night.' },
+          desc: 'Smoked meat sandwiches or the legendary poutine. Fuel for the night.',
+          map: MAPS + "Schwartz's+Deli+Montreal" },
         { time: '7:00 PM',  title: 'DodgeBow Archery', loc: 'DodgeBow Montreal',
           desc: 'Combat archery tag. Foam-tipped arrows, full send. Bring competitive energy.',
+          map: MAPS + 'DodgeBow+Montreal',
           alt: 'Low-key Plateau exploring — wander Mont-Royal Ave, hit a terrasse, scout dinner spots.' },
         { time: '9:30 PM',  title: 'Dieu du Ciel! Brewpub', loc: 'Laurier Ave W',
-          desc: "Montreal's iconic craft brewery. Try the Péché Mortel. Toast to the groom." },
+          desc: "Montreal's iconic craft brewery. Try the Péché Mortel. Toast to the groom.",
+          map: MAPS + 'Dieu+du+Ciel+Montreal' },
       ],
     },
     {
@@ -401,17 +373,22 @@
       events: [
         { time: '11:00 AM', title: 'Mile-End Food Tour', loc: 'Mile-End',
           desc: 'Bagels, cheese, espresso, and neighborhood history on foot.',
+          map: MAPS + 'Mile+End+Montreal',
           alt: 'Sleep in + slow coffee at Café Olimpico. Meet the crew at lunch.' },
         { time: '2:30 PM',  title: 'Lachine Rapids Rafting', loc: 'Saute-Moutons / Lachine',
           desc: 'White-water rafting on the St. Lawrence. You WILL get soaked. (See: Friday Dry Bag.)',
+          map: MAPS + 'Saute-Moutons+Lachine+Rapids+Jet+Boating+Montreal',
           alt: 'Old Montreal walking tour — cobblestones, the Old Port, Notre-Dame Basilica.' },
         { time: '6:00 PM',  title: 'Clean Up & Reset', loc: 'Airbnb',
           desc: 'Shower, recharge phones, get sharp.',
+          map: MAPS + 'Rue+Saint-Denis+%26+Avenue+Duluth+Montreal',
           dress: 'Dress code: elevated summer evening wear — think linen shirts & jackets.' },
         { time: '8:00 PM',  title: 'Dinner at Joséphine', loc: 'Joséphine Restaurant',
-          desc: 'Reservation for the full crew. The centerpiece dinner — show up looking good.' },
+          desc: 'Reservation for the full crew. The centerpiece dinner — show up looking good.',
+          map: MAPS + 'Josephine+Restaurant+Montreal' },
         { time: '10:30 PM', title: 'Casino de Montréal', loc: "Île Notre-Dame",
           desc: 'Tables, lights, late-night energy. Passport required at the door.',
+          map: MAPS + 'Casino+de+Montreal',
           alt: 'The Coldroom — hidden speakeasy in Old Montreal. Cocktails over chaos.' },
       ],
     },
@@ -420,27 +397,35 @@
       events: [
         { time: '9:00 AM',  title: 'Mount Royal Hike', loc: 'Parc du Mont-Royal',
           desc: 'Optional sunrise-ish climb to the Kondiaronk Belvedere lookout. Clears the head.',
+          map: MAPS + 'Kondiaronk+Belvedere+Mount+Royal+Montreal',
           alt: 'Sleep. No shame. (Optional means optional.)' },
         { time: '11:00 AM', title: '9 Holes at Mystic Pines', loc: 'Mystic Pines Golf',
           desc: 'Casual 9-hole round. Carts, beers, friendly wagers.',
+          map: MAPS + 'Mystic+Pines+Golf',
           alt: 'BIXI bike ride along the Lachine Canal — flat, scenic, breezy.' },
         { time: '3:00 PM',  title: 'Terrasse St-Ambroise', loc: 'St-Ambroise Brewery Terrasse',
-          desc: 'Canal-side beer garden. Regroup, relax, soak up the afternoon sun.' },
+          desc: 'Canal-side beer garden. Regroup, relax, soak up the afternoon sun.',
+          map: MAPS + 'Terrasse+St-Ambroise+Montreal' },
         { time: '8:00 PM',  title: "Dinner at L'Express", loc: "L'Express · St-Denis",
-          desc: 'Classic Parisian bistro institution. Steak frites and a proper send-off meal.' },
-        { time: '10:30 PM', title: 'Boulevard Saint-Laurent', loc: 'The Main',
-          desc: "Montreal's nightlife spine. Bars, clubs, late eats. Stick with your ride group." },
+          desc: 'Classic Parisian bistro institution. Steak frites and a proper send-off meal.',
+          map: MAPS + "L'Express+Restaurant+Montreal" },
+        { time: '10:30 PM', title: 'Nightlife on Boulevard Saint-Laurent', loc: 'The Main',
+          desc: "Montreal's nightlife spine. Bars, clubs, late eats. Stick together and pace yourselves.",
+          map: MAPS + 'Boulevard+Saint-Laurent+Montreal' },
       ],
     },
     {
       day: 'Sunday', date: 'August 16', tag: 'Departure',
       events: [
         { time: '10:00 AM', title: 'Pack Out', loc: 'Airbnb',
-          desc: 'Strip the beds, gather trash, find your other shoe. Checkout is firm.' },
+          desc: 'Strip the beds, gather trash, find your other shoe. Checkout is firm.',
+          map: MAPS + 'Rue+Saint-Denis+%26+Avenue+Duluth+Montreal' },
         { time: '10:30 AM', title: 'Fairmount Bagel Run', loc: 'Fairmount Bagel',
-          desc: 'Wood-fired Montreal bagels for the road. Buy a dozen for home.' },
+          desc: 'Wood-fired Montreal bagels for the road. Buy a dozen for home.',
+          map: MAPS + 'Fairmount+Bagel+Montreal' },
         { time: '11:30 AM', title: 'Departures', loc: 'YUL / Highway',
-          desc: 'Coordinate airport rides by group. Safe travels — and well done, gentlemen.' },
+          desc: 'Coordinate airport rides and head out. Safe travels — and well done, gentlemen.',
+          map: MAPS + 'Montreal-Trudeau+International+Airport+YUL' },
       ],
     },
   ];
@@ -463,7 +448,14 @@
                   <span class="text-sm font-bold text-sageDeep tabular-nums">${e.time}</span>
                   <h4 class="font-display text-xl font-600 text-ink">${e.title}</h4>
                 </div>
-                <p class="text-xs uppercase tracking-wide text-slate mb-2">${e.loc}</p>
+                <div class="flex items-center gap-2 mb-2">
+                  <p class="text-xs uppercase tracking-wide text-slate">${e.loc}</p>
+                  ${e.map ? `
+                    <a href="${e.map}" target="_blank" rel="noopener" aria-label="Open ${e.title} in Google Maps"
+                       class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-sage/15 text-sageDeep hover:bg-sage/30 transition shrink-0">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </a>` : ''}
+                </div>
                 <p class="text-sm text-charcoal/80 leading-relaxed">${e.desc}</p>
                 ${e.dress ? `
                   <div class="mt-3 flex items-start gap-2 text-sm text-sageDeep bg-sage/10 border border-sageDeep/20 rounded-xl px-3 py-2">
