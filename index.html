@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jimmy's Montreal Bachelor Party · Aug 13–16</title>
+  <meta name="description" content="Itinerary, logistics, and trivia for Jimmy's Montreal bachelor party, August 13–16." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            linen:    '#F4F1EA',
+            linen2:   '#ECE7DB',
+            sage:     '#8A9A82',
+            sageDeep: '#5F7059',
+            slate:    '#54606B',
+            charcoal: '#2B2F33',
+            ink:      '#1C1E20',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body { -webkit-font-smoothing: antialiased; }
+    .grain {
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(43,47,51,.05) 1px, transparent 0);
+      background-size: 22px 22px;
+    }
+    .fade-up { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-up.in { opacity: 1; transform: none; }
+    /* Quiz answer states */
+    .opt-correct   { border-color:#5F7059 !important; background:#E7EDE3 !important; color:#3C4A37 !important; }
+    .opt-wrong     { border-color:#B4524A !important; background:#F3E2E0 !important; color:#7A2E29 !important; }
+    .opt-disabled  { opacity:.55; cursor:not-allowed; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .chev { transform: rotate(180deg); }
+  </style>
+</head>
+
+<body class="bg-linen text-charcoal font-sans antialiased">
+
+  <!-- ===================== NAV ===================== -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-linen/80 border-b border-charcoal/10">
+    <nav class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+      <a href="#top" class="font-display text-xl font-600 tracking-wide text-ink">
+        Jimmy<span class="text-sage">·</span>MTL
+      </a>
+      <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate">
+        <a href="#logistics" class="hover:text-sageDeep transition">Logistics</a>
+        <a href="#itinerary" class="hover:text-sageDeep transition">Itinerary</a>
+        <a href="#quiz" class="hover:text-sageDeep transition">Trivia</a>
+        <a href="#gallery" class="hover:text-sageDeep transition">Vault</a>
+        <a href="#packing" class="hover:text-sageDeep transition">Packing</a>
+      </div>
+      <a href="#itinerary" class="text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full bg-charcoal text-linen hover:bg-ink transition">Plan</a>
+    </nav>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="top" class="relative overflow-hidden grain">
+    <div class="absolute inset-0 bg-gradient-to-b from-linen via-linen to-linen2"></div>
+    <div class="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-sage/20 blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-24 w-96 h-96 rounded-full bg-slate/15 blur-3xl"></div>
+
+    <div class="relative max-w-6xl mx-auto px-5 pt-16 pb-20 md:pt-24 md:pb-28 text-center">
+      <p class="text-xs md:text-sm uppercase tracking-[0.35em] text-sageDeep font-semibold mb-6">
+        Montréal · Québec · Canada
+      </p>
+      <h1 class="font-display text-5xl sm:text-6xl md:text-8xl leading-[0.95] font-600 text-ink">
+        Jimmy's<br />
+        <span class="italic text-sageDeep">Bachelor Party</span>
+      </h1>
+      <p class="mt-6 text-base md:text-lg text-slate max-w-xl mx-auto">
+        Four days. Fourteen guys. One last send-off before the big day.
+        <span class="whitespace-nowrap font-semibold text-charcoal">August 13 – 16</span>
+      </p>
+
+      <!-- COUNTDOWN -->
+      <div class="mt-12">
+        <p class="text-xs uppercase tracking-[0.3em] text-slate mb-4">Wheels up in</p>
+        <div id="countdown" class="grid grid-cols-4 gap-2 sm:gap-4 max-w-2xl mx-auto">
+          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+            <div id="cd-days"  class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
+            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Days</div>
+          </div>
+          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+            <div id="cd-hours" class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
+            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Hours</div>
+          </div>
+          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+            <div id="cd-mins"  class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
+            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Minutes</div>
+          </div>
+          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+            <div id="cd-secs"  class="font-display text-4xl sm:text-6xl font-600 text-sageDeep tabular-nums">00</div>
+            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Seconds</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LOGISTICS ===================== -->
+  <section id="logistics" class="max-w-6xl mx-auto px-5 py-20 md:py-28">
+    <div class="fade-up text-center mb-12">
+      <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">The Essentials</p>
+      <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">Logistics & Quick Links</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mb-5">
+      <!-- Basecamp -->
+      <div class="fade-up bg-white rounded-3xl border border-charcoal/10 p-7 shadow-sm flex flex-col">
+        <div class="w-11 h-11 rounded-2xl bg-sage/15 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-sageDeep" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <h3 class="font-display text-2xl font-600 text-ink">Basecamp</h3>
+        <p class="text-sm text-slate mt-2 leading-relaxed flex-1">
+          Our Airbnb sits in the heart of the Plateau, at the corner of
+          <span class="font-semibold text-charcoal">Rue Saint-Denis &amp; Ave Duluth</span> — walkable to everything.
+        </p>
+        <a href="https://www.google.com/maps/search/?api=1&query=Rue+Saint-Denis+%26+Avenue+Duluth+Montreal"
+           target="_blank" rel="noopener"
+           class="mt-5 inline-flex items-center justify-center gap-2 text-sm font-semibold px-5 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">
+          Open in Google Maps
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+
+      <!-- Splitwise -->
+      <div class="fade-up bg-white rounded-3xl border border-charcoal/10 p-7 shadow-sm flex flex-col">
+        <div class="w-11 h-11 rounded-2xl bg-sage/15 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-sageDeep" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-display text-2xl font-600 text-ink">Splitwise</h3>
+        <p class="text-sm text-slate mt-2 leading-relaxed flex-1">
+          Log every shared expense the moment it happens. No awkward Venmo math on Sunday — settle up clean.
+        </p>
+        <a href="https://www.splitwise.com/" target="_blank" rel="noopener"
+           class="mt-5 inline-flex items-center justify-center gap-2 text-sm font-semibold px-5 py-3 rounded-full bg-sageDeep text-linen hover:bg-sage transition">
+          Open the Group Tab
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+
+      <!-- Group size -->
+      <div class="fade-up bg-charcoal text-linen rounded-3xl p-7 shadow-sm flex flex-col justify-center">
+        <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">The Crew</p>
+        <div class="font-display text-6xl font-600 leading-none">14</div>
+        <p class="text-sm text-linen/70 mt-3 leading-relaxed">
+          guys, three ride groups. Keep your team together and the city moves fast.
+        </p>
+      </div>
+    </div>
+
+    <!-- Uber Teams -->
+    <div class="fade-up bg-linen2 rounded-3xl border border-charcoal/10 p-7 md:p-9">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-2xl bg-charcoal flex items-center justify-center">
+          <svg class="w-5 h-5 text-linen" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8m0 0v8m0-8l-8 8M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl font-600 text-ink leading-tight">Uber Ride Groups</h3>
+          <p class="text-xs text-slate">Same team rides together — split the fare, never wait.</p>
+        </div>
+      </div>
+      <div id="ride-groups" class="grid sm:grid-cols-3 gap-4"><!-- injected by JS --></div>
+    </div>
+  </section>
+
+  <!-- ===================== ITINERARY ===================== -->
+  <section id="itinerary" class="bg-linen2 grain border-y border-charcoal/10">
+    <div class="max-w-4xl mx-auto px-5 py-20 md:py-28">
+      <div class="fade-up text-center mb-14">
+        <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Thursday → Sunday</p>
+        <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">The Itinerary</h2>
+        <p class="text-sm text-slate mt-3 max-w-md mx-auto">
+          Every block has an <span class="font-semibold text-sageDeep">Alternative Option</span> — go hard or go easy, no one gets left behind.
+        </p>
+      </div>
+      <div id="itinerary-root" class="space-y-12"><!-- injected by JS --></div>
+    </div>
+  </section>
+
+  <!-- ===================== QUIZ ===================== -->
+  <section id="quiz" class="max-w-3xl mx-auto px-5 py-20 md:py-28">
+    <div class="fade-up text-center mb-10">
+      <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Prove It</p>
+      <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">How Well Do You Know Jimmy?</h2>
+    </div>
+
+    <div class="fade-up bg-white rounded-3xl border border-charcoal/10 shadow-sm p-6 md:p-9">
+      <!-- progress -->
+      <div class="flex items-center justify-between text-xs text-slate mb-2">
+        <span id="quiz-progress-label">Question 1 of 5</span>
+        <span id="quiz-score-label">Score: 0</span>
+      </div>
+      <div class="w-full h-2 rounded-full bg-linen2 overflow-hidden mb-7">
+        <div id="quiz-bar" class="h-full bg-sageDeep transition-all duration-500" style="width:0%"></div>
+      </div>
+
+      <!-- question -->
+      <div id="quiz-stage">
+        <h3 id="quiz-question" class="font-display text-2xl md:text-3xl font-600 text-ink mb-6">…</h3>
+        <div id="quiz-options" class="space-y-3"><!-- injected --></div>
+        <div class="mt-6 flex items-center justify-between">
+          <p id="quiz-feedback" class="text-sm font-medium"></p>
+          <button id="quiz-next"
+            class="hidden text-sm font-semibold px-6 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">
+            Next →
+          </button>
+        </div>
+      </div>
+
+      <!-- results -->
+      <div id="quiz-results" class="hidden text-center py-6">
+        <p class="text-xs uppercase tracking-[0.3em] text-slate mb-3">Final Verdict</p>
+        <div id="quiz-final-score" class="font-display text-7xl font-600 text-sageDeep">0/5</div>
+        <h3 id="quiz-rank" class="font-display text-3xl font-600 text-ink mt-4">—</h3>
+        <p id="quiz-rank-desc" class="text-sm text-slate mt-2 max-w-sm mx-auto"></p>
+        <button id="quiz-restart"
+          class="mt-8 text-sm font-semibold px-6 py-3 rounded-full border border-charcoal/20 text-charcoal hover:bg-linen2 transition">
+          Try Again
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GALLERY / VAULT ===================== -->
+  <section id="gallery" class="bg-charcoal text-linen grain">
+    <div class="max-w-6xl mx-auto px-5 py-20 md:py-28">
+      <div class="fade-up text-center mb-10">
+        <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">Evidence</p>
+        <h2 class="font-display text-4xl md:text-5xl font-600 text-linen">The Groom Vault</h2>
+        <p class="text-sm text-linen/60 mt-3 max-w-md mx-auto">
+          One shared album. Tap, upload, contribute. What happens in Montreal goes in the vault.
+        </p>
+        <a href="https://photos.google.com/" target="_blank" rel="noopener"
+           class="mt-7 inline-flex items-center justify-center gap-2 text-sm font-semibold px-7 py-3.5 rounded-full bg-sage text-charcoal hover:bg-linen transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Open Shared Album
+        </a>
+      </div>
+
+      <div class="fade-up grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <!-- placeholders -->
+        <div class="aspect-square rounded-2xl bg-linen/5 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 01</div>
+        <div class="aspect-square rounded-2xl bg-linen/10 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 02</div>
+        <div class="aspect-square rounded-2xl bg-linen/5 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 03</div>
+        <div class="aspect-square rounded-2xl bg-linen/10 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 04</div>
+        <div class="aspect-square rounded-2xl bg-linen/10 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 05</div>
+        <div class="aspect-square rounded-2xl bg-linen/5 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 06</div>
+        <div class="aspect-square rounded-2xl bg-linen/10 border border-linen/10 flex items-center justify-center text-linen/30 text-xs">Memory 07</div>
+        <div class="aspect-square rounded-2xl bg-sage/20 border border-sage/30 flex items-center justify-center text-sage text-center text-xs font-semibold px-2">+ Add yours</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PACKING ===================== -->
+  <section id="packing" class="max-w-4xl mx-auto px-5 py-20 md:py-28">
+    <div class="fade-up text-center mb-12">
+      <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Don't Get Left Behind</p>
+      <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">Mandatory Packing</h2>
+      <p class="text-sm text-slate mt-3">Tap each item as you pack it. Progress saves on this device.</p>
+    </div>
+
+    <!-- Passport callout -->
+    <div class="fade-up bg-[#F3E2E0] border border-[#B4524A]/30 rounded-3xl p-6 md:p-7 mb-6">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 shrink-0 rounded-2xl bg-[#B4524A] flex items-center justify-center">
+          <svg class="w-5 h-5 text-linen" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl font-600 text-[#7A2E29]">PASSPORT — non-negotiable</h3>
+          <p class="text-sm text-[#7A2E29]/80 mt-1 leading-relaxed">
+            You are crossing an international border. A US State ID is <span class="font-bold">not guaranteed</span> to be accepted at Montreal clubs or the casino. Bring your passport for the border <em>and</em> the door.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="packing-root" class="grid md:grid-cols-2 gap-5"><!-- injected by JS --></div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="bg-ink text-linen/60">
+    <div class="max-w-6xl mx-auto px-5 py-12 text-center">
+      <p class="font-display text-2xl text-linen">Jimmy's Montreal Bachelor Party</p>
+      <p class="text-sm mt-2">August 13 – 16 · Le Plateau-Mont-Royal</p>
+      <p class="text-xs mt-6 text-linen/40">Made for the crew. Drink water. Bring your passport.</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- =====================  JAVASCRIPT  ======================= -->
+  <!-- ========================================================= -->
+  <script>
+  /* -------------------------------------------------------------
+     1. COUNTDOWN  →  target: August 13 (year auto-rolls)
+     ------------------------------------------------------------- */
+  (function () {
+    const TARGET_MONTH = 7;   // 0-indexed → August
+    const TARGET_DAY   = 13;
+    const now = new Date();
+    let year = now.getFullYear();
+    let target = new Date(year, TARGET_MONTH, TARGET_DAY, 0, 0, 0);
+    if (target < now) target = new Date(year + 1, TARGET_MONTH, TARGET_DAY, 0, 0, 0);
+
+    const el = {
+      d: document.getElementById('cd-days'),
+      h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'),
+      s: document.getElementById('cd-secs'),
+    };
+    const pad = n => String(n).padStart(2, '0');
+
+    function tick() {
+      const diff = target - new Date();
+      if (diff <= 0) {
+        el.d.textContent = el.h.textContent = el.m.textContent = el.s.textContent = '00';
+        document.getElementById('countdown').insertAdjacentHTML('afterend',
+          '<p class="mt-6 font-display text-2xl text-sageDeep">It\'s go time. 🇨🇦</p>');
+        clearInterval(timer);
+        return;
+      }
+      const s = Math.floor(diff / 1000);
+      el.d.textContent = pad(Math.floor(s / 86400));
+      el.h.textContent = pad(Math.floor((s % 86400) / 3600));
+      el.m.textContent = pad(Math.floor((s % 3600) / 60));
+      el.s.textContent = pad(s % 60);
+    }
+    tick();
+    const timer = setInterval(tick, 1000);
+  })();
+
+  /* -------------------------------------------------------------
+     2. UBER RIDE GROUPS
+     ------------------------------------------------------------- */
+  const RIDE_GROUPS = [
+    { team: 'Team A', tone: 'sage',  members: ['Jimmy', 'Marcus', 'Dev', 'Ty', 'Sean'] },
+    { team: 'Team B', tone: 'slate', members: ['Will', 'Andre', 'Pat', 'Greg', 'Luis'] },
+    { team: 'Team C', tone: 'char',  members: ['Nate', 'Omar', 'Chris', 'Hassan'] },
+  ];
+  (function () {
+    const tones = {
+      sage:  'bg-sage/15 border-sageDeep/30',
+      slate: 'bg-slate/10 border-slate/30',
+      char:  'bg-charcoal/5 border-charcoal/20',
+    };
+    document.getElementById('ride-groups').innerHTML = RIDE_GROUPS.map(g => `
+      <div class="rounded-2xl border ${tones[g.tone]} p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-display text-xl font-600 text-ink">${g.team}</h4>
+          <span class="text-xs font-semibold text-slate">${g.members.length} riders</span>
+        </div>
+        <ul class="space-y-1.5">
+          ${g.members.map(m => `
+            <li class="flex items-center gap-2 text-sm text-charcoal">
+              <span class="w-1.5 h-1.5 rounded-full bg-sageDeep"></span>${m}
+            </li>`).join('')}
+        </ul>
+      </div>`).join('');
+  })();
+
+  /* -------------------------------------------------------------
+     3. ITINERARY DATA + RENDER
+     ------------------------------------------------------------- */
+  const ITINERARY = [
+    {
+      day: 'Thursday', date: 'August 13', tag: 'Arrival',
+      events: [
+        { time: '2:00 PM',  title: 'Arrival & Check-in', loc: 'Airbnb · St-Denis & Duluth',
+          desc: 'Drop bags, claim beds (first come first served), regroup on the balcony.' },
+        { time: '4:30 PM',  title: 'Late Lunch', loc: "Schwartz's Deli / La Banquise",
+          desc: 'Smoked meat sandwiches or the legendary poutine. Fuel for the night.' },
+        { time: '7:00 PM',  title: 'DodgeBow Archery', loc: 'DodgeBow Montreal',
+          desc: 'Combat archery tag. Foam-tipped arrows, full send. Bring competitive energy.',
+          alt: 'Low-key Plateau exploring — wander Mont-Royal Ave, hit a terrasse, scout dinner spots.' },
+        { time: '9:30 PM',  title: 'Dieu du Ciel! Brewpub', loc: 'Laurier Ave W',
+          desc: "Montreal's iconic craft brewery. Try the Péché Mortel. Toast to the groom." },
+      ],
+    },
+    {
+      day: 'Friday', date: 'August 14', tag: 'Big Day',
+      events: [
+        { time: '11:00 AM', title: 'Mile-End Food Tour', loc: 'Mile-End',
+          desc: 'Bagels, cheese, espresso, and neighborhood history on foot.',
+          alt: 'Sleep in + slow coffee at Café Olimpico. Meet the crew at lunch.' },
+        { time: '2:30 PM',  title: 'Lachine Rapids Rafting', loc: 'Saute-Moutons / Lachine',
+          desc: 'White-water rafting on the St. Lawrence. You WILL get soaked. (See: Friday Dry Bag.)',
+          alt: 'Old Montreal walking tour — cobblestones, the Old Port, Notre-Dame Basilica.' },
+        { time: '6:00 PM',  title: 'Clean Up & Reset', loc: 'Airbnb',
+          desc: 'Shower, recharge phones, get sharp.',
+          dress: 'Dress code: elevated summer evening wear — think linen shirts & jackets.' },
+        { time: '8:00 PM',  title: 'Dinner at Joséphine', loc: 'Joséphine Restaurant',
+          desc: 'Reservation for the full crew. The centerpiece dinner — show up looking good.' },
+        { time: '10:30 PM', title: 'Casino de Montréal', loc: "Île Notre-Dame",
+          desc: 'Tables, lights, late-night energy. Passport required at the door.',
+          alt: 'The Coldroom — hidden speakeasy in Old Montreal. Cocktails over chaos.' },
+      ],
+    },
+    {
+      day: 'Saturday', date: 'August 15', tag: 'Outdoors',
+      events: [
+        { time: '9:00 AM',  title: 'Mount Royal Hike', loc: 'Parc du Mont-Royal',
+          desc: 'Optional sunrise-ish climb to the Kondiaronk Belvedere lookout. Clears the head.',
+          alt: 'Sleep. No shame. (Optional means optional.)' },
+        { time: '11:00 AM', title: '9 Holes at Mystic Pines', loc: 'Mystic Pines Golf',
+          desc: 'Casual 9-hole round. Carts, beers, friendly wagers.',
+          alt: 'BIXI bike ride along the Lachine Canal — flat, scenic, breezy.' },
+        { time: '3:00 PM',  title: 'Terrasse St-Ambroise', loc: 'St-Ambroise Brewery Terrasse',
+          desc: 'Canal-side beer garden. Regroup, relax, soak up the afternoon sun.' },
+        { time: '8:00 PM',  title: "Dinner at L'Express", loc: "L'Express · St-Denis",
+          desc: 'Classic Parisian bistro institution. Steak frites and a proper send-off meal.' },
+        { time: '10:30 PM', title: 'Boulevard Saint-Laurent', loc: 'The Main',
+          desc: "Montreal's nightlife spine. Bars, clubs, late eats. Stick with your ride group." },
+      ],
+    },
+    {
+      day: 'Sunday', date: 'August 16', tag: 'Departure',
+      events: [
+        { time: '10:00 AM', title: 'Pack Out', loc: 'Airbnb',
+          desc: 'Strip the beds, gather trash, find your other shoe. Checkout is firm.' },
+        { time: '10:30 AM', title: 'Fairmount Bagel Run', loc: 'Fairmount Bagel',
+          desc: 'Wood-fired Montreal bagels for the road. Buy a dozen for home.' },
+        { time: '11:30 AM', title: 'Departures', loc: 'YUL / Highway',
+          desc: 'Coordinate airport rides by group. Safe travels — and well done, gentlemen.' },
+      ],
+    },
+  ];
+
+  (function () {
+    const dotTone = 'bg-sageDeep';
+    document.getElementById('itinerary-root').innerHTML = ITINERARY.map(d => `
+      <div class="fade-up">
+        <div class="flex items-baseline gap-3 mb-6">
+          <h3 class="font-display text-3xl md:text-4xl font-600 text-ink">${d.day}</h3>
+          <span class="text-sm text-slate">${d.date}</span>
+          <span class="ml-auto text-[10px] uppercase tracking-widest font-semibold text-sageDeep bg-sage/15 px-3 py-1 rounded-full">${d.tag}</span>
+        </div>
+        <div class="relative pl-7 border-l-2 border-charcoal/15 space-y-6">
+          ${d.events.map(e => `
+            <div class="relative">
+              <span class="absolute -left-[34px] top-1.5 w-3.5 h-3.5 rounded-full ${dotTone} ring-4 ring-linen2"></span>
+              <div class="bg-white rounded-2xl border border-charcoal/10 p-5 shadow-sm">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
+                  <span class="text-sm font-bold text-sageDeep tabular-nums">${e.time}</span>
+                  <h4 class="font-display text-xl font-600 text-ink">${e.title}</h4>
+                </div>
+                <p class="text-xs uppercase tracking-wide text-slate mb-2">${e.loc}</p>
+                <p class="text-sm text-charcoal/80 leading-relaxed">${e.desc}</p>
+                ${e.dress ? `
+                  <div class="mt-3 flex items-start gap-2 text-sm text-sageDeep bg-sage/10 border border-sageDeep/20 rounded-xl px-3 py-2">
+                    <svg class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    <span class="font-medium">${e.dress}</span>
+                  </div>` : ''}
+                ${e.alt ? `
+                  <div class="mt-3 rounded-xl border border-slate/25 bg-slate/5 px-3 py-2.5">
+                    <p class="text-[10px] uppercase tracking-widest font-bold text-slate mb-0.5">Alternative Option</p>
+                    <p class="text-sm text-slate leading-relaxed">${e.alt}</p>
+                  </div>` : ''}
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+  })();
+
+  /* -------------------------------------------------------------
+     4. PACKING CHECKLIST (with localStorage)
+     ------------------------------------------------------------- */
+  const PACKING = [
+    { id: 'passport', title: 'Passport', critical: true,
+      note: 'Border + clubs + casino. A US State ID is NOT guaranteed. Do not skip.' },
+    { id: 'drybag', title: 'The Friday Dry Bag', critical: true,
+      note: 'Backpack · towel · full change of dry clothes & underwear · water shoes or old sneakers for rafting.' },
+    { id: 'evening', title: 'Evening Gear', critical: false,
+      note: 'Linen shirts / a light jacket for dinners at Joséphine & L\'Express, plus the casino.' },
+    { id: 'casual', title: 'Daytime Casual', critical: false,
+      note: 'Athletic wear for archery, hiking & golf. Comfortable walking shoes.' },
+    { id: 'sun', title: 'Sun & Weather', critical: false,
+      note: 'Sunglasses, sunscreen, a cap. August in Montreal runs warm and humid.' },
+    { id: 'charge', title: 'Chargers & Cash', critical: false,
+      note: 'Phone charger, portable battery, and some CAD cash for tips and small spots.' },
+  ];
+  (function () {
+    const KEY = 'jimmy-mtl-packing';
+    let state = {};
+    try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) {}
+
+    const root = document.getElementById('packing-root');
+    function render() {
+      root.innerHTML = PACKING.map(item => {
+        const done = !!state[item.id];
+        return `
+        <button data-id="${item.id}"
+          class="text-left rounded-2xl border p-5 transition flex items-start gap-4
+                 ${done ? 'bg-sage/10 border-sageDeep/40' : 'bg-white border-charcoal/10 hover:border-sageDeep/40'} shadow-sm">
+          <span class="mt-0.5 w-6 h-6 shrink-0 rounded-lg border-2 flex items-center justify-center transition
+                       ${done ? 'bg-sageDeep border-sageDeep' : 'border-charcoal/30'}">
+            ${done ? '<svg class="w-4 h-4 text-linen" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+          </span>
+          <span>
+            <span class="font-display text-xl font-600 ${done ? 'text-sageDeep' : 'text-ink'}">
+              ${item.title}${item.critical ? ' <span class="align-middle text-[9px] uppercase tracking-widest text-[#B4524A] bg-[#B4524A]/10 px-2 py-0.5 rounded-full no-underline">Critical</span>' : ''}
+            </span>
+            <span class="block text-sm text-slate mt-1 leading-relaxed">${item.note}</span>
+          </span>
+        </button>`;
+      }).join('');
+    }
+    root.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-id]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      state[id] = !state[id];
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {}
+      render();
+    });
+    render();
+  })();
+
+  /* -------------------------------------------------------------
+     5. TRIVIA QUIZ
+     ------------------------------------------------------------- */
+  (function () {
+    let idx = 0, score = 0, locked = false;
+    const $ = id => document.getElementById(id);
+    const stage = $('quiz-stage'), results = $('quiz-results');
+
+    function loadQuestion() {
+      locked = false;
+      const q = QUIZ[idx];
+      $('quiz-progress-label').textContent = `Question ${idx + 1} of ${QUIZ.length}`;
+      $('quiz-score-label').textContent = `Score: ${score}`;
+      $('quiz-bar').style.width = `${(idx / QUIZ.length) * 100}%`;
+      $('quiz-question').textContent = q.q;
+      $('quiz-feedback').textContent = '';
+      $('quiz-next').classList.add('hidden');
+
+      $('quiz-options').innerHTML = q.options.map((opt, i) => `
+        <button data-i="${i}"
+          class="opt w-full text-left px-5 py-4 rounded-2xl border-2 border-charcoal/15 bg-linen hover:border-sageDeep/50 transition font-medium text-charcoal">
+          ${opt}
+        </button>`).join('');
+    }
+
+    $('quiz-options').addEventListener('click', e => {
+      const btn = e.target.closest('button.opt');
+      if (!btn || locked) return;
+      locked = true;
+      const chosen = +btn.dataset.i;
+      const q = QUIZ[idx];
+      const correct = q.answer;
+      const buttons = [...document.querySelectorAll('#quiz-options .opt')];
+
+      buttons.forEach((b, i) => {
+        b.classList.add('opt-disabled');
+        if (i === correct) b.classList.add('opt-correct');
+        if (i === chosen && chosen !== correct) b.classList.add('opt-wrong');
+      });
+
+      const fb = $('quiz-feedback');
+      if (chosen === correct) {
+        score++;
+        fb.textContent = '✓ ' + (q.note || 'Correct!');
+        fb.className = 'text-sm font-medium text-sageDeep';
+      } else {
+        fb.textContent = '✗ ' + (q.note || 'Not quite.');
+        fb.className = 'text-sm font-medium text-[#B4524A]';
+      }
+      $('quiz-score-label').textContent = `Score: ${score}`;
+      $('quiz-bar').style.width = `${((idx + 1) / QUIZ.length) * 100}%`;
+      $('quiz-next').classList.remove('hidden');
+      $('quiz-next').textContent = idx + 1 < QUIZ.length ? 'Next →' : 'See Results →';
+    });
+
+    $('quiz-next').addEventListener('click', () => {
+      idx++;
+      if (idx < QUIZ.length) loadQuestion();
+      else showResults();
+    });
+
+    function showResults() {
+      stage.classList.add('hidden');
+      results.classList.remove('hidden');
+      $('quiz-bar').style.width = '100%';
+      $('quiz-final-score').textContent = `${score}/${QUIZ.length}`;
+      const r = RANKS.find(r => score >= r.min) || RANKS[RANKS.length - 1];
+      $('quiz-rank').textContent = r.title;
+      $('quiz-rank-desc').textContent = r.desc;
+    }
+
+    $('quiz-restart').addEventListener('click', () => {
+      idx = 0; score = 0;
+      results.classList.add('hidden');
+      stage.classList.remove('hidden');
+      loadQuestion();
+    });
+
+    // QUIZ data is defined in the editable block lower in the file,
+    // so wait until the whole document has parsed before first render.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadQuestion);
+    } else {
+      loadQuestion();
+    }
+  })();
+
+  /* -------------------------------------------------------------
+     6. SCROLL REVEAL
+     ------------------------------------------------------------- */
+  (function () {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+  })();
+  </script>
+
+  <!-- ========================================================= -->
+  <!-- ===========  EDITABLE CONTENT (quiz + ranks)  =========== -->
+  <!-- ===========  Edit the groom's trivia here.    =========== -->
+  <!-- ========================================================= -->
+  <script>
+  const QUIZ = [
+    {
+      q: "Where did Jimmy and the bride first meet?",
+      options: ["A wedding", "College orientation", "A dating app", "At work"],
+      answer: 1,
+      note: "College orientation week — been inseparable since.",
+    },
+    {
+      q: "What's Jimmy's go-to drink order?",
+      options: ["Old Fashioned", "Light beer, always", "Espresso martini", "Whatever's on tap"],
+      answer: 0,
+      note: "An Old Fashioned, every single time.",
+    },
+    {
+      q: "Which of these has Jimmy genuinely never done?",
+      options: ["Run a marathon", "Gone skydiving", "Eaten sushi", "Sung karaoke sober"],
+      answer: 3,
+      note: "He has NEVER done karaoke sober. This weekend may change that.",
+    },
+    {
+      q: "What's Jimmy's most-quoted movie?",
+      options: ["The Departed", "Step Brothers", "Gladiator", "The Office (not a movie, but he'll argue)"],
+      answer: 1,
+      note: "Step Brothers — he can recite the whole thing.",
+    },
+    {
+      q: "What's the one thing Jimmy will absolutely forget to pack?",
+      options: ["His phone", "His passport", "A charger", "His chill"],
+      answer: 2,
+      note: "Always the charger. Someone bring a spare.",
+    },
+  ];
+
+  const RANKS = [
+    { min: 5, title: "Best Man Material", desc: "Flawless. You know Jimmy better than he knows himself. The toast is yours." },
+    { min: 3, title: "Solid Friend",      desc: "Respectable showing. You've clearly put in the years. Buy him a round." },
+    { min: 0, title: "Acquaintance",      desc: "...Are you sure you're at the right bachelor party? Stick close this weekend." },
+  ];
+  </script>
+
+</body>
+</html>
+
