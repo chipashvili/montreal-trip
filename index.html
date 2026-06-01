@@ -65,8 +65,7 @@
       <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate">
         <a href="#logistics" class="hover:text-sageDeep transition">Logistics</a>
         <a href="#itinerary" class="hover:text-sageDeep transition">Itinerary</a>
-        <a href="#quiz" class="hover:text-sageDeep transition">Trivia</a>
-        <a href="#game" class="hover:text-sageDeep transition">Arcade</a>
+        <a href="#extras" class="hover:text-sageDeep transition">Extras</a>
         <a href="#gallery" class="hover:text-sageDeep transition">Vault</a>
         <a href="#packing" class="hover:text-sageDeep transition">Packing</a>
       </div>
@@ -193,86 +192,107 @@
     </div>
   </section>
 
-  <!-- ===================== QUIZ ===================== -->
-  <section id="quiz" class="max-w-3xl mx-auto px-5 py-20 md:py-28">
+<section id="extras" class="max-w-3xl mx-auto px-5 py-20 md:py-28">
     <div class="fade-up text-center mb-10">
-      <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Prove It</p>
-      <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">How Well Do You Know Jimmy?</h2>
+      <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Time Killers & Tools</p>
+      <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">The Montreal Modules</h2>
     </div>
 
-    <div class="fade-up bg-white rounded-3xl border border-charcoal/10 shadow-sm p-6 md:p-9">
-      <!-- progress -->
-      <div class="flex items-center justify-between text-xs text-slate mb-2">
-        <span id="quiz-progress-label">Question 1 of 5</span>
-        <span id="quiz-score-label">Score: 0</span>
-      </div>
-      <div class="w-full h-2 rounded-full bg-linen2 overflow-hidden mb-7">
-        <div id="quiz-bar" class="h-full bg-sageDeep transition-all duration-500" style="width:0%"></div>
-      </div>
+    <div class="fade-up shadow-sm rounded-3xl overflow-hidden border border-charcoal/10">
+      
+      <details class="group bg-white border-b border-charcoal/10">
+        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer font-display text-2xl md:text-3xl font-600 text-ink hover:bg-linen/30 transition">
+          <span>French Phrasebook</span>
+          <svg class="chev w-6 h-6 text-sageDeep transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-6 md:px-8 pb-8 space-y-4 text-sm md:text-base">
+          <div class="flex flex-col md:flex-row md:justify-between border-b border-charcoal/5 pb-3">
+            <span class="font-semibold text-charcoal">Two beers, please.</span>
+            <span class="text-sageDeep italic">Deux bières, s'il vous plaît.</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:justify-between border-b border-charcoal/5 pb-3">
+            <span class="font-semibold text-charcoal">Where is the restroom?</span>
+            <span class="text-sageDeep italic">Où sont les toilettes ?</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:justify-between border-b border-charcoal/5 pb-3">
+            <span class="font-semibold text-charcoal">Keep the change.</span>
+            <span class="text-sageDeep italic">Gardez la monnaie.</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:justify-between border-b border-charcoal/5 pb-3 mt-6">
+            <span class="font-semibold text-charcoal">How much for a lap dance?</span>
+            <span class="text-sageDeep italic">C'est combien pour une danse sur les genoux ?</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:justify-between border-b border-charcoal/5 pb-3">
+            <span class="font-semibold text-charcoal">I'd like a male stripper, please.</span>
+            <span class="text-sageDeep italic">Je voudrais un strip-teaseur, s'il vous plaît.</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:justify-between pb-1">
+            <span class="font-semibold text-charcoal">Where is the best place to dispose of a body?</span>
+            <span class="text-sageDeep italic">Quel est le meilleur endroit pour se débarrasser d'un corps ?</span>
+          </div>
+        </div>
+      </details>
 
-      <!-- question -->
-      <div id="quiz-stage">
-        <h3 id="quiz-question" class="font-display text-2xl md:text-3xl font-600 text-ink mb-6">…</h3>
-        <div id="quiz-options" class="space-y-3"><!-- injected --></div>
-        <div class="mt-6 flex items-center justify-between">
-          <p id="quiz-feedback" class="text-sm font-medium"></p>
-          <button id="quiz-next"
-            class="hidden text-sm font-semibold px-6 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">
-            Next →
+      <details class="group bg-white border-b border-charcoal/10">
+        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer font-display text-2xl md:text-3xl font-600 text-ink hover:bg-linen/30 transition">
+          <span>Trivia: How well do you know Jimmy?</span>
+          <svg class="chev w-6 h-6 text-sageDeep transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-6 md:px-8 pb-8">
+          <div class="flex items-center justify-between text-xs text-slate mb-2">
+            <span id="quiz-progress-label">Question 1 of 5</span>
+            <span id="quiz-score-label">Score: 0</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-linen2 overflow-hidden mb-7">
+            <div id="quiz-bar" class="h-full bg-sageDeep transition-all duration-500" style="width:0%"></div>
+          </div>
+          <div id="quiz-stage">
+            <h3 id="quiz-question" class="font-display text-2xl md:text-3xl font-600 text-ink mb-6">…</h3>
+            <div id="quiz-options" class="space-y-3"></div>
+            <div class="mt-6 flex items-center justify-between">
+              <p id="quiz-feedback" class="text-sm font-medium"></p>
+              <button id="quiz-next" class="hidden text-sm font-semibold px-6 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">Next →</button>
+            </div>
+          </div>
+          <div id="quiz-results" class="hidden text-center py-6">
+            <p class="text-xs uppercase tracking-[0.3em] text-slate mb-3">Final Verdict</p>
+            <div id="quiz-final-score" class="font-display text-7xl font-600 text-sageDeep">0/5</div>
+            <h3 id="quiz-rank" class="font-display text-3xl font-600 text-ink mt-4">—</h3>
+            <p id="quiz-rank-desc" class="text-sm text-slate mt-2 max-w-sm mx-auto"></p>
+            <button id="quiz-restart" class="mt-8 text-sm font-semibold px-6 py-3 rounded-full border border-charcoal/20 text-charcoal hover:bg-linen2 transition">Try Again</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="group bg-charcoal text-linen" id="game-drawer">
+        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer font-display text-2xl md:text-3xl font-600 hover:bg-ink transition">
+          <span>Arcade: Hungry Jimmy</span>
+          <svg class="chev w-6 h-6 text-sage transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </summary>
+        <div class="px-6 md:px-8 pb-8 flex flex-col items-center w-full">
+          <p class="text-sm text-linen/60 mb-6 text-center max-w-sm">Use the on-screen arrows or your keyboard. Feed him. Don't hit the walls.</p>
+          <div class="mb-4 flex justify-between w-full max-w-[400px] px-2">
+            <span class="font-display text-xl text-sage">Score: <span id="snake-score">0</span></span>
+            <span class="font-display text-xl text-linen/60">High: <span id="snake-high">0</span></span>
+          </div>
+          <canvas id="snake-board" width="400" height="400" class="w-full max-w-[400px] aspect-square bg-ink border-2 border-sage/30 rounded-xl shadow-lg touch-none"></canvas>
+          <div class="mt-8 grid grid-cols-3 gap-3 w-full max-w-[280px] md:hidden">
+            <div></div>
+            <button id="btn-up" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬆️</button>
+            <div></div>
+            <button id="btn-left" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬅️</button>
+            <button id="btn-down" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬇️</button>
+            <button id="btn-right" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">➡️</button>
+          </div>
+          <button id="start-snake" class="mt-8 text-sm font-semibold px-8 py-4 rounded-full bg-sage text-charcoal hover:bg-linen transition w-full max-w-[280px] md:max-w-xs">
+            Start Game
           </button>
         </div>
-      </div>
-
-      <!-- results -->
-      <div id="quiz-results" class="hidden text-center py-6">
-        <p class="text-xs uppercase tracking-[0.3em] text-slate mb-3">Final Verdict</p>
-        <div id="quiz-final-score" class="font-display text-7xl font-600 text-sageDeep">0/5</div>
-        <h3 id="quiz-rank" class="font-display text-3xl font-600 text-ink mt-4">—</h3>
-        <p id="quiz-rank-desc" class="text-sm text-slate mt-2 max-w-sm mx-auto"></p>
-        <button id="quiz-restart"
-          class="mt-8 text-sm font-semibold px-6 py-3 rounded-full border border-charcoal/20 text-charcoal hover:bg-linen2 transition">
-          Try Again
-        </button>
-      </div>
-    </div>
-  </section>
-
-<!-- ===================== MINI GAME ===================== -->
-  <section id="game" class="bg-charcoal text-linen grain border-t border-charcoal/10">
-    <div class="max-w-3xl mx-auto px-5 py-20 md:py-28 text-center">
-      <div class="fade-up mb-10">
-        <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">Time Killer</p>
-        <h2 class="font-display text-4xl md:text-5xl font-600 text-linen">Hungry Jimmy</h2>
-        <p class="text-sm text-linen/60 mt-3 max-w-md mx-auto">
-          Use the on-screen arrows or your keyboard. Feed him. Don't hit the walls.
-        </p>
-      </div>
+      </details>
       
-<div class="fade-up flex flex-col items-center w-full">
-        <div class="mb-4 flex justify-between w-full max-w-[400px] px-2">
-          <span class="font-display text-xl text-sage">Score: <span id="snake-score">0</span></span>
-          <span class="font-display text-xl text-slate">High: <span id="snake-high">0</span></span>
-        </div>
-        
-        <canvas id="snake-board" width="400" height="400" class="w-full max-w-[400px] aspect-square bg-ink border-2 border-sage/30 rounded-xl shadow-lg touch-none"></canvas>
-        
-        <div class="mt-8 grid grid-cols-3 gap-3 w-full max-w-[280px] md:hidden">
-          <div></div>
-          <button id="btn-up" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬆️</button>
-          <div></div>
-          <button id="btn-left" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬅️</button>
-          <button id="btn-down" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬇️</button>
-          <button id="btn-right" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">➡️</button>
-        </div>
-        
-        <button id="start-snake" class="mt-8 text-sm font-semibold px-8 py-4 rounded-full bg-sage text-charcoal hover:bg-linen transition w-full max-w-[280px] md:max-w-xs">
-          Start Game
-        </button>
-      </div>
     </div>
   </section>
-
-
+  
   <!-- ===================== GALLERY / VAULT ===================== -->
   <section id="gallery" class="bg-charcoal text-linen grain">
     <div class="max-w-6xl mx-auto px-5 py-20 md:py-28">
