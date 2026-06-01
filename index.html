@@ -107,6 +107,18 @@
     /* ---- Section wave divider ---- */
     .wave-divider { display:block; width:100%; height:48px; }
     .wave-divider path { fill: rgb(var(--c-linen2)); }
+
+    /* ---- Crew rolodex card-flip ---- */
+    #crew-photo, #crew-name, #crew-line { transition: opacity .18s ease, transform .28s ease; }
+    .crew-flipping #crew-photo,
+    .crew-flipping #crew-name,
+    .crew-flipping #crew-line { opacity: 0; }
+    .crew-flipping.dir-next #crew-photo { transform: translateX(-12px); }
+    .crew-flipping.dir-prev #crew-photo { transform: translateX(12px); }
+    @media (prefers-reduced-motion: reduce) {
+      #crew-photo, #crew-name, #crew-line { transition: opacity .12s ease; }
+      .crew-flipping #crew-photo { transform: none !important; }
+    }
   </style>
 </head>
 
@@ -234,16 +246,64 @@
         </a>
       </div>
 
-      <!-- Group size -->
-      <div class="fade-up lift bg-charcoal text-linen rounded-3xl p-7 shadow-sm flex flex-col justify-center">
+      <!-- Group size — opens the crew rolodex -->
+      <button id="crew-open" type="button" aria-haspopup="dialog"
+        class="fade-up lift group text-left bg-charcoal text-linen rounded-3xl p-7 shadow-sm flex flex-col justify-center cursor-pointer">
         <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">The Crew</p>
         <div class="font-display text-6xl font-600 leading-none">14</div>
         <p class="text-sm text-linen/70 mt-3 leading-relaxed">
-          guys, one long weekend. Tap any stop below for directions and keep the crew moving.
+          guys, one long weekend. Tap to meet the lineup.
         </p>
-      </div>
+        <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-sage group-hover:gap-3 transition-all">
+          Flip through the roster
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </span>
+      </button>
     </div>
   </section>
+
+  <!-- ===================== CREW ROLODEX MODAL ===================== -->
+  <div id="crew-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="The Crew roster">
+    <!-- backdrop -->
+    <div id="crew-backdrop" class="absolute inset-0 bg-ink/70 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+
+    <!-- card -->
+    <div id="crew-card-wrap" class="relative w-full max-w-sm scale-95 opacity-0 transition-all duration-300">
+      <div class="bg-white rounded-3xl border border-charcoal/10 shadow-2xl overflow-hidden">
+        <!-- header -->
+        <div class="flex items-center justify-between px-5 py-4 border-b border-charcoal/10">
+          <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold">The Crew</p>
+          <button id="crew-close" type="button" aria-label="Close roster"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full text-slate hover:bg-linen2 hover:text-charcoal transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- photo / face -->
+        <div class="relative bg-linen2">
+          <div id="crew-photo" class="aspect-square w-full flex items-center justify-center overflow-hidden select-none">
+            <!-- injected by JS: <img> if photo set, else monogram placeholder -->
+          </div>
+          <!-- prev / next arrows -->
+          <button id="crew-prev" type="button" aria-label="Previous person"
+            class="absolute left-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/85 text-charcoal shadow-md hover:bg-white transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="crew-next" type="button" aria-label="Next person"
+            class="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/85 text-charcoal shadow-md hover:bg-white transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <!-- name + line -->
+        <div class="px-6 py-6 text-center">
+          <h3 id="crew-name" class="font-display text-3xl font-600 text-ink leading-tight">—</h3>
+          <p id="crew-line" class="text-sm text-slate mt-2 leading-relaxed min-h-[2.5rem]"></p>
+          <p id="crew-count" class="mt-4 text-[11px] uppercase tracking-widest text-slate/70">1 / 14</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ===================== ITINERARY ===================== -->
   <section id="itinerary" class="relative bg-linen2 grain">
@@ -815,7 +875,102 @@
   })();
 
   /* -------------------------------------------------------------
-     6. SCROLL REVEAL
+     6. CREW ROLODEX
+     ------------------------------------------------------------- */
+  (function () {
+    const modal    = document.getElementById('crew-modal');
+    if (!modal) return;
+    const backdrop = document.getElementById('crew-backdrop');
+    const wrap     = document.getElementById('crew-card-wrap');
+    const openBtn  = document.getElementById('crew-open');
+    const closeBtn = document.getElementById('crew-close');
+    const prevBtn  = document.getElementById('crew-prev');
+    const nextBtn  = document.getElementById('crew-next');
+    const photoEl  = document.getElementById('crew-photo');
+    const nameEl   = document.getElementById('crew-name');
+    const lineEl   = document.getElementById('crew-line');
+    const countEl  = document.getElementById('crew-count');
+
+    let i = 0, lastFocus = null;
+
+    function initials(name) {
+      return name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function paint() {
+      const p = CREW[i];
+      // Photo: real image if provided, otherwise a monogram placeholder.
+      photoEl.innerHTML = p.photo
+        ? `<img src="${p.photo}" alt="${p.name}" class="w-full h-full object-cover">`
+        : `<div class="flex flex-col items-center justify-center text-sageDeep">
+             <div class="font-display text-7xl font-600 leading-none">${initials(p.name)}</div>
+             <div class="mt-3 text-[10px] uppercase tracking-[0.3em] text-slate/60">photo coming soon</div>
+           </div>`;
+      nameEl.textContent  = p.name;
+      lineEl.textContent  = p.line || '';
+      countEl.textContent = `${i + 1} / ${CREW.length}`;
+    }
+
+    function go(delta) {
+      const dir = delta > 0 ? 'dir-next' : 'dir-prev';
+      modal.classList.add('crew-flipping', dir);
+      setTimeout(() => {
+        i = (i + delta + CREW.length) % CREW.length;
+        paint();
+        modal.classList.remove('crew-flipping', 'dir-next', 'dir-prev');
+      }, 180);
+    }
+
+    function open() {
+      lastFocus = document.activeElement;
+      paint();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        backdrop.classList.add('opacity-100');
+        wrap.classList.remove('scale-95', 'opacity-0');
+      });
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function close() {
+      backdrop.classList.remove('opacity-100');
+      wrap.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        if (lastFocus) lastFocus.focus();
+      }, 250);
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    prevBtn.addEventListener('click', () => go(-1));
+    nextBtn.addEventListener('click', () => go(1));
+
+    document.addEventListener('keydown', e => {
+      if (modal.classList.contains('hidden')) return;
+      if (e.key === 'Escape')      close();
+      if (e.key === 'ArrowRight')  go(1);
+      if (e.key === 'ArrowLeft')   go(-1);
+    });
+
+    // Swipe support on the photo area
+    let startX = null;
+    photoEl.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    photoEl.addEventListener('touchend', e => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+      startX = null;
+    });
+  })();
+
+  /* -------------------------------------------------------------
+     7. SCROLL REVEAL
      ------------------------------------------------------------- */
   (function () {
     const io = new IntersectionObserver(entries => {
@@ -826,10 +981,32 @@
   </script>
 
   <!-- ========================================================= -->
-  <!-- ===========  EDITABLE CONTENT (quiz + ranks)  =========== -->
-  <!-- ===========  Edit the groom's trivia here.    =========== -->
+  <!-- ===========  EDITABLE CONTENT (crew + quiz + ranks)  ===== -->
+  <!-- ===========  Edit the roster and trivia here.    ========= -->
   <!-- ========================================================= -->
   <script>
+  /* CREW ROSTER — flip-through rolodex.
+     • name : shown big under the photo
+     • line : the funny one-liner
+     • photo: path to an image (e.g. 'faces/otto.jpg'). Leave '' for a
+              monogram placeholder until you drop the real photo in. */
+  const CREW = [
+    { name: 'Jimmy',   photo: 'faces/jimmy.jpg', line: 'The man of the hour. None of this happens without him.' },
+    { name: 'Otto',    photo: 'faces/otto.jpg', line: 'planned this shit' },
+    { name: 'Alex',    photo: '', line: 'Add a funny line here.' },
+    { name: 'Cullan',  photo: '', line: 'Add a funny line here.' },
+    { name: 'Dan',     photo: '', line: 'Add a funny line here.' },
+    { name: 'David',   photo: '', line: 'Add a funny line here.' },
+    { name: 'Harrison',photo: '', line: 'Add a funny line here.' },
+    { name: 'Jeremy',  photo: 'faces/yerm.jpg', line: 'AKA Dr. Yerm.' },
+    { name: 'Johnny',  photo: '', line: 'Add a funny line here.' },
+    { name: 'Jon',     photo: '', line: 'Add a funny line here.' },
+    { name: 'Parker',  photo: '', line: 'Add a funny line here.' },
+    { name: 'William', photo: '', line: 'Add a funny line here.' },
+    { name: 'Will K',  photo: '', line: 'Add a funny line here.' },
+    { name: 'Will C',  photo: '', line: 'Add a funny line here.' },
+  ];
+
   const QUIZ = [
     {
       q: "Where did Jimmy and Morgan first meet?",
