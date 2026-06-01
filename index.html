@@ -729,7 +729,7 @@
   ];
   
   /* -------------------------------------------------------------
-     7. HUNGRY JIMMY SNAKE GAME (Image Upgrade)
+     7. HUNGRY JIMMY SNAKE GAME (Bulletproof Image Load)
      ------------------------------------------------------------- */
   (function() {
     const canvas = document.getElementById('snake-board');
@@ -739,10 +739,14 @@
     const scoreEl = document.getElementById('snake-score');
     const highEl = document.getElementById('snake-high');
 
-    // Pre-load Jimmy's face into memory
+    // Pre-load Jimmy's face with safety fallbacks
     const jimmyImg = new Image();
+    let imgReady = false;
+    jimmyImg.onload = () => { imgReady = true; };
+    jimmyImg.onerror = () => { console.warn("Could not load jimmy.png - falling back to emoji."); };
     jimmyImg.src = 'jimmy.png';
 
+    const JIMMY_FACE_FALLBACK = '🧔🏻‍♂️'; 
     const FOOD_ITEMS = ['🍺','🍄',''🍃', '🥃', '🌮', '🚬', '🥡'];
 
     const box = 20; // grid size
@@ -759,7 +763,7 @@
       snake[0] = { x: 9 * box, y: 10 * box };
       score = 0;
       scoreEl.innerText = score;
-      d = null; // starting direction
+      d = null; 
       spawnFood();
     }
 
@@ -780,7 +784,6 @@
       else if (key == 39 && d != 'LEFT') d = 'RIGHT';
       else if (key == 40 && d != 'UP') d = 'DOWN';
       
-      // Prevent screen scrolling when playing with arrows
       if([37, 38, 39, 40].includes(key) && gameInterval) event.preventDefault();
     }
 
@@ -810,10 +813,16 @@
       }
 
       for (let i = 0; i < snake.length; i++) {
-        // Draw Head (Jimmy's Face) or Body
         if (i == 0) { 
-          // Draw the loaded image instead of text
-          ctx.drawImage(jimmyImg, snake[i].x, snake[i].y, box, box);
+          // Draw image if loaded, otherwise draw emoji
+          if (imgReady) {
+            ctx.drawImage(jimmyImg, snake[i].x, snake[i].y, box, box);
+          } else {
+            ctx.font = '22px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(JIMMY_FACE_FALLBACK, snake[i].x + box/2, snake[i].y + box/2);
+          }
         } else {
           ctx.fillStyle = '#5F7059'; 
           ctx.fillRect(snake[i].x, snake[i].y, box, box);
@@ -828,7 +837,6 @@
       ctx.textBaseline = 'middle';
       ctx.fillText(food.icon, food.x + box/2, food.y + box/2);
 
-      // Old head position
       let snakeX = snake[0].x;
       let snakeY = snake[0].y;
 
@@ -848,12 +856,12 @@
         }
         spawnFood();
       } else {
-        snake.pop(); // Remove tail
+        snake.pop();
       }
 
       let newHead = { x: snakeX, y: snakeY };
 
-      // Game over rules (Hit wall or hit self)
+      // Game over rules
       if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
         clearInterval(gameInterval);
         gameInterval = null;
@@ -882,7 +890,6 @@
     startBtn.addEventListener('click', () => {
       init();
       startBtn.innerText = "Playing...";
-      // Force focus so arrow keys work immediately
       window.scrollTo({ top: document.getElementById('game').offsetTop, behavior: 'smooth' });
       if (gameInterval) clearInterval(gameInterval);
       gameInterval = setInterval(draw, 120);
