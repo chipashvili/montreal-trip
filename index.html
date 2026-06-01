@@ -92,32 +92,63 @@
         <span class="whitespace-nowrap font-semibold text-charcoal">August 13 – 16</span>
       </p>
 
-      <!-- COUNTDOWN -->
-      <div class="mt-12">
-        <p class="text-xs uppercase tracking-[0.3em] text-slate mb-4">Wheels up in</p>
-        <div id="countdown" class="grid grid-cols-4 gap-2 sm:gap-4 max-w-2xl mx-auto">
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
-            <div id="cd-days"  class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
-            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Days</div>
-          </div>
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
-            <div id="cd-hours" class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
-            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Hours</div>
-          </div>
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
-            <div id="cd-mins"  class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
-            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Minutes</div>
-          </div>
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
-            <div id="cd-secs"  class="font-display text-4xl sm:text-6xl font-600 text-sageDeep tabular-nums">00</div>
-            <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Seconds</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      /* -------------------------------------------------------------
+     1. COUNTDOWN  →  Targeting: August 13-16, 2026
+     ------------------------------------------------------------- */
+  (function () {
+    // Hardcoded dates for the trip
+    const tripStart = new Date('August 13, 2026 00:00:00').getTime();
+    const tripEnd   = new Date('August 17, 2026 00:00:00').getTime(); // Triggers at midnight after the 16th
 
-  <!-- ===================== LOGISTICS ===================== -->
+    const container = document.getElementById('countdown');
+    const headerText = container.previousElementSibling; // Targets the "Wheels up in" text
+
+    const el = {
+      d: document.getElementById('cd-days'),
+      h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'),
+      s: document.getElementById('cd-secs'),
+    };
+    const pad = n => String(n).padStart(2, '0');
+
+    function tick() {
+      const now = new Date().getTime();
+
+      // 1. AFTER THE TRIP (August 17 and beyond)
+      if (now >= tripEnd) {
+        headerText.style.display = 'none';
+        container.innerHTML = `
+          <div class="col-span-4 bg-white/70 border border-charcoal/10 rounded-2xl py-8 shadow-sm">
+            <div class="font-display text-3xl md:text-5xl font-600 text-sageDeep">What a weekend. It was nice seeing you boys. 🍻</div>
+          </div>`;
+        clearInterval(timer);
+        return;
+      }
+
+      // 2. DURING THE TRIP (August 13 - August 16)
+      if (now >= tripStart && now < tripEnd) {
+         headerText.style.display = 'none';
+         container.innerHTML = `
+          <div class="col-span-4 bg-sageDeep border border-charcoal/10 rounded-2xl py-8 shadow-sm">
+            <div class="font-display text-3xl md:text-5xl font-600 text-linen">It's time. Let's go. 🇨🇦</div>
+          </div>`;
+         clearInterval(timer);
+         return;
+      }
+
+      // 3. BEFORE THE TRIP (Standard Countdown)
+      const diff = tripStart - now;
+      const s = Math.floor(diff / 1000);
+      el.d.textContent = pad(Math.floor(s / 86400));
+      el.h.textContent = pad(Math.floor((s % 86400) / 3600));
+      el.m.textContent = pad(Math.floor((s % 3600) / 60));
+      el.s.textContent = pad(s % 60);
+    }
+    
+    tick();
+    const timer = setInterval(tick, 1000);
+  })();
+    <!-- ===================== LOGISTICS ===================== -->
   <section id="logistics" class="max-w-6xl mx-auto px-5 py-20 md:py-28">
     <div class="fade-up text-center mb-12">
       <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">The Essentials</p>
@@ -634,7 +665,7 @@
     {
       q: "Where did Jimmy and Morgan first meet?",
       options: ["A wedding", "College orientation", "A dating app", "At work"],
-      answer: 3,
+      answer: 2,
       note: "ayo.",
     },
     {
@@ -645,7 +676,7 @@
     },
     {
       q: "Which of these has Jimmy genuinely never done?",
-      options: ["Run a half marathon", "Gone skydiving", "Dishonored his anscestors", "Sung karaoke sober"],
+      options: ["Run a half marathon", "Gone skydiving", "Dishonored his ancestors", "Sung karaoke sober"],
       answer: 3,
       note: "ayoo",
     },
