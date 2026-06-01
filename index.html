@@ -66,6 +66,7 @@
         <a href="#logistics" class="hover:text-sageDeep transition">Logistics</a>
         <a href="#itinerary" class="hover:text-sageDeep transition">Itinerary</a>
         <a href="#quiz" class="hover:text-sageDeep transition">Trivia</a>
+        <a href="#game" class="hover:text-sageDeep transition">Arcade</a>
         <a href="#gallery" class="hover:text-sageDeep transition">Vault</a>
         <a href="#packing" class="hover:text-sageDeep transition">Packing</a>
       </div>
@@ -235,6 +236,45 @@
       </div>
     </div>
   </section>
+
+<!-- ===================== MINI GAME ===================== -->
+  <section id="game" class="bg-charcoal text-linen grain border-t border-charcoal/10">
+    <div class="max-w-3xl mx-auto px-5 py-20 md:py-28 text-center">
+      <div class="fade-up mb-10">
+        <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">Time Killer</p>
+        <h2 class="font-display text-4xl md:text-5xl font-600 text-linen">Hungry Jimmy</h2>
+        <p class="text-sm text-linen/60 mt-3 max-w-md mx-auto">
+          Use the on-screen arrows or your keyboard. Feed him. Don't hit the walls.
+        </p>
+      </div>
+      
+      <div class="fade-up flex flex-col items-center">
+        <!-- Scoreboard -->
+        <div class="mb-4 flex justify-between w-full max-w-[400px] px-2">
+          <span class="font-display text-xl text-sage">Score: <span id="snake-score">0</span></span>
+          <span class="font-display text-xl text-slate">High: <span id="snake-high">0</span></span>
+        </div>
+        
+        <!-- Game Canvas -->
+        <canvas id="snake-board" width="400" height="400" class="bg-ink border-2 border-sage/30 rounded-xl shadow-lg touch-none"></canvas>
+        
+        <!-- Mobile Controls -->
+        <div class="mt-8 grid grid-cols-3 gap-2 w-56 md:hidden">
+          <div></div>
+          <button id="btn-up" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">⬆️</button>
+          <div></div>
+          <button id="btn-left" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">⬅️</button>
+          <button id="btn-down" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">⬇️</button>
+          <button id="btn-right" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">➡️</button>
+        </div>
+        
+        <button id="start-snake" class="mt-8 text-sm font-semibold px-8 py-3 rounded-full bg-sage text-charcoal hover:bg-linen transition">
+          Start Game
+        </button>
+      </div>
+    </div>
+  </section>
+
 
   <!-- ===================== GALLERY / VAULT ===================== -->
   <section id="gallery" class="bg-charcoal text-linen grain">
@@ -687,7 +727,177 @@
     { min: 3, title: "Solid Friend",      desc: "Respectable showing. You've clearly put in the years. Buy him a round." },
     { min: 0, title: "Acquaintance",      desc: "...Are you sure you're at the right bachelor party? Stick close this weekend." },
   ];
-  </script>
+  
+  /* -------------------------------------------------------------
+     7. HUNGRY JIMMY SNAKE GAME (Image Upgrade)
+     ------------------------------------------------------------- */
+  (function() {
+    const canvas = document.getElementById('snake-board');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('start-snake');
+    const scoreEl = document.getElementById('snake-score');
+    const highEl = document.getElementById('snake-high');
+
+    // Pre-load Jimmy's face into memory
+    const jimmyImg = new Image();
+    jimmyImg.src = 'jimmy.png';
+
+    const FOOD_ITEMS = ['🍺','🍄',''🍃', '🥃', '🌮', '🚬', '🥡'];
+
+    const box = 20; // grid size
+    let snake = [];
+    let d;
+    let food;
+    let score = 0;
+    let highScore = localStorage.getItem('jimmy-snake-high') || 0;
+    highEl.innerText = highScore;
+    let gameInterval;
+
+    function init() {
+      snake = [];
+      snake[0] = { x: 9 * box, y: 10 * box };
+      score = 0;
+      scoreEl.innerText = score;
+      d = null; // starting direction
+      spawnFood();
+    }
+
+    function spawnFood() {
+      food = {
+        x: Math.floor(Math.random() * 19) * box,
+        y: Math.floor(Math.random() * 19) * box,
+        icon: FOOD_ITEMS[Math.floor(Math.random() * FOOD_ITEMS.length)]
+      };
+    }
+
+    // Desktop Keyboard Controls
+    document.addEventListener('keydown', direction);
+    function direction(event) {
+      let key = event.keyCode;
+      if (key == 37 && d != 'RIGHT') d = 'LEFT';
+      else if (key == 38 && d != 'DOWN') d = 'UP';
+      else if (key == 39 && d != 'LEFT') d = 'RIGHT';
+      else if (key == 40 && d != 'UP') d = 'DOWN';
+      
+      // Prevent screen scrolling when playing with arrows
+      if([37, 38, 39, 40].includes(key) && gameInterval) event.preventDefault();
+    }
+
+    // Mobile Button Controls
+    const bindBtn = (id, dir, opp) => {
+      const btn = document.getElementById(id);
+      if(btn) {
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); if(d != opp) d = dir; }, {passive: false});
+        btn.addEventListener('mousedown', (e) => { e.preventDefault(); if(d != opp) d = dir; });
+      }
+    };
+    bindBtn('btn-up', 'UP', 'DOWN');
+    bindBtn('btn-down', 'DOWN', 'UP');
+    bindBtn('btn-left', 'LEFT', 'RIGHT');
+    bindBtn('btn-right', 'RIGHT', 'LEFT');
+
+    function draw() {
+      // Clear board
+      ctx.fillStyle = '#1C1E20';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+      for(let i=0; i<400; i+=box) {
+        ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,400); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(400,i); ctx.stroke();
+      }
+
+      for (let i = 0; i < snake.length; i++) {
+        // Draw Head (Jimmy's Face) or Body
+        if (i == 0) { 
+          // Draw the loaded image instead of text
+          ctx.drawImage(jimmyImg, snake[i].x, snake[i].y, box, box);
+        } else {
+          ctx.fillStyle = '#5F7059'; 
+          ctx.fillRect(snake[i].x, snake[i].y, box, box);
+          ctx.strokeStyle = '#1C1E20';
+          ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+        }
+      }
+
+      // Draw Food
+      ctx.font = '20px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(food.icon, food.x + box/2, food.y + box/2);
+
+      // Old head position
+      let snakeX = snake[0].x;
+      let snakeY = snake[0].y;
+
+      if (d == 'LEFT') snakeX -= box;
+      if (d == 'UP') snakeY -= box;
+      if (d == 'RIGHT') snakeX += box;
+      if (d == 'DOWN') snakeY += box;
+
+      // Eat food
+      if (snakeX == food.x && snakeY == food.y) {
+        score++;
+        scoreEl.innerText = score;
+        if (score > highScore) {
+          highScore = score;
+          highEl.innerText = highScore;
+          localStorage.setItem('jimmy-snake-high', highScore);
+        }
+        spawnFood();
+      } else {
+        snake.pop(); // Remove tail
+      }
+
+      let newHead = { x: snakeX, y: snakeY };
+
+      // Game over rules (Hit wall or hit self)
+      if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+        clearInterval(gameInterval);
+        gameInterval = null;
+        ctx.fillStyle = 'rgba(28, 30, 32, 0.85)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#F4F1EA';
+        ctx.font = 'bold 36px "Cormorant Garamond"';
+        ctx.fillText('Dead.', canvas.width/2, canvas.height/2 - 10);
+        ctx.font = '16px "Inter"';
+        ctx.fillStyle = '#8A9A82';
+        ctx.fillText(`Final Score: ${score}`, canvas.width/2, canvas.height/2 + 25);
+        startBtn.innerText = "Try Again";
+        return;
+      }
+
+      snake.unshift(newHead);
+    }
+
+    function collision(head, array) {
+      for (let i = 0; i < array.length; i++) {
+        if (head.x == array[i].x && head.y == array[i].y) return true;
+      }
+      return false;
+    }
+
+    startBtn.addEventListener('click', () => {
+      init();
+      startBtn.innerText = "Playing...";
+      // Force focus so arrow keys work immediately
+      window.scrollTo({ top: document.getElementById('game').offsetTop, behavior: 'smooth' });
+      if (gameInterval) clearInterval(gameInterval);
+      gameInterval = setInterval(draw, 120);
+    });
+
+    // Draw initial blank state
+    ctx.fillStyle = '#1C1E20';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#54606B';
+    ctx.font = '16px "Inter"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Hit Start to Feed Jimmy', canvas.width/2, canvas.height/2);
+
+  })();  </script>
 
 </body>
 </html>
