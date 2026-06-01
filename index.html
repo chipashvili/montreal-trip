@@ -14,13 +14,13 @@
       theme: {
         extend: {
           colors: {
-            linen:    '#F4F1EA',
-            linen2:   '#ECE7DB',
-            sage:     '#8A9A82',
-            sageDeep: '#5F7059',
-            slate:    '#54606B',
-            charcoal: '#2B2F33',
-            ink:      '#1C1E20',
+            linen:    'rgb(var(--c-linen) / <alpha-value>)',
+            linen2:   'rgb(var(--c-linen2) / <alpha-value>)',
+            sage:     'rgb(var(--c-sage) / <alpha-value>)',
+            sageDeep: 'rgb(var(--c-sageDeep) / <alpha-value>)',
+            slate:    'rgb(var(--c-slate) / <alpha-value>)',
+            charcoal: 'rgb(var(--c-charcoal) / <alpha-value>)',
+            ink:      'rgb(var(--c-ink) / <alpha-value>)',
           },
           fontFamily: {
             display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
@@ -37,25 +37,83 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    /* ---- Palette as CSS variables (R G B triplets for Tailwind alpha) ---- */
+    :root {
+      --c-linen:    244 241 234;
+      --c-linen2:   236 231 219;
+      --c-sage:     138 154 130;
+      --c-sageDeep:  95 112  89;
+      --c-slate:     84  96 107;
+      --c-charcoal:  43  47  51;
+      --c-ink:       28  30  32;
+      --grain-rgb:   43, 47, 51;
+    }
+    /* ---- "After hours" night palette: warm dark, sage stays the accent ---- */
+    html.night {
+      --c-linen:    28  30  32;   /* page bg becomes deep ink   */
+      --c-linen2:   38  41  45;   /* secondary surfaces         */
+      --c-sage:    150 168 142;   /* slightly brighter accent   */
+      --c-sageDeep:130 148 122;
+      --c-slate:   148 160 171;   /* muted text lifts for dark  */
+      --c-charcoal:236 231 219;   /* "dark" text becomes light  */
+      --c-ink:     244 241 234;   /* darkest text becomes linen */
+      --grain-rgb: 255, 255, 255;
+    }
+    html { transition: none; }
+    html.theme-ready, html.theme-ready body, html.theme-ready * {
+      transition: background-color .5s ease, color .5s ease, border-color .5s ease;
+    }
+    /* In night mode, retint hardcoded white card surfaces to a dark elevated tone */
+    html.night .bg-white      { background-color: rgb(44 48 53) !important; }
+    html.night .bg-white\/70  { background-color: rgb(44 48 53 / .7) !important; }
+    html.night .bg-white\/80  { background-color: rgb(28 30 32 / .8) !important; }
+
     body { -webkit-font-smoothing: antialiased; }
     .grain {
       background-image:
-        radial-gradient(circle at 1px 1px, rgba(43,47,51,.05) 1px, transparent 0);
+        radial-gradient(circle at 1px 1px, rgba(var(--grain-rgb),.05) 1px, transparent 0);
       background-size: 22px 22px;
     }
     .fade-up { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
     .fade-up.in { opacity: 1; transform: none; }
-    /* Quiz answer states */
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { opacity: 1 !important; transform: none !important; }
+    }
+
+    /* ---- Quiz answer states ---- */
     .opt-correct   { border-color:#5F7059 !important; background:#E7EDE3 !important; color:#3C4A37 !important; }
     .opt-wrong     { border-color:#B4524A !important; background:#F3E2E0 !important; color:#7A2E29 !important; }
     .opt-disabled  { opacity:.55; cursor:not-allowed; }
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
     details[open] .chev { transform: rotate(180deg); }
+
+    /* ---- Scroll progress bar ---- */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: linear-gradient(90deg, rgb(var(--c-sageDeep)), rgb(var(--c-sage)));
+      z-index: 60; transition: width .1s linear;
+    }
+
+    /* ---- Card lift micro-interaction ---- */
+    .lift { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+    .lift:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); }
+    @media (prefers-reduced-motion: reduce) { .lift:hover { transform: none; } }
+
+    /* ---- Map pin bounce on hover ---- */
+    .pin-link svg { transition: transform .25s ease; }
+    .pin-link:hover svg { transform: translateY(-2px) scale(1.12); }
+
+    /* ---- Section wave divider ---- */
+    .wave-divider { display:block; width:100%; height:48px; }
+    .wave-divider path { fill: rgb(var(--c-linen2)); }
   </style>
 </head>
 
 <body class="bg-linen text-charcoal font-sans antialiased">
+
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress" aria-hidden="true"></div>
 
   <!-- ===================== NAV ===================== -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-linen/80 border-b border-charcoal/10">
@@ -70,7 +128,15 @@
         <a href="#gallery" class="hover:text-sageDeep transition">Vault</a>
         <a href="#packing" class="hover:text-sageDeep transition">Packing</a>
       </div>
-      <a href="#itinerary" class="text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full bg-charcoal text-linen hover:bg-ink transition">Plan</a>
+      <div class="flex items-center gap-2">
+        <!-- After-hours / night-mode toggle -->
+        <button id="theme-toggle" type="button" aria-label="Toggle after-hours mode"
+          class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-charcoal/15 text-slate hover:text-sageDeep hover:border-sageDeep/40 transition">
+          <svg class="theme-icon-sun w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+          <svg class="theme-icon-moon w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+        <a href="#itinerary" class="text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full bg-charcoal text-linen hover:bg-ink transition">Plan</a>
+      </div>
     </nav>
   </header>
 
@@ -97,19 +163,19 @@
       <div class="mt-12">
         <p class="text-xs uppercase tracking-[0.3em] text-slate mb-4">Wheels up in</p>
         <div id="countdown" class="grid grid-cols-4 gap-2 sm:gap-4 max-w-2xl mx-auto">
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+          <div class="lift bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
             <div id="cd-days"  class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
             <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Days</div>
           </div>
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+          <div class="lift bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
             <div id="cd-hours" class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
             <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Hours</div>
           </div>
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+          <div class="lift bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
             <div id="cd-mins"  class="font-display text-4xl sm:text-6xl font-600 text-ink tabular-nums">00</div>
             <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Minutes</div>
           </div>
-          <div class="bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
+          <div class="lift bg-white/70 border border-charcoal/10 rounded-2xl py-5 sm:py-7 shadow-sm">
             <div id="cd-secs"  class="font-display text-4xl sm:text-6xl font-600 text-sageDeep tabular-nums">00</div>
             <div class="text-[10px] sm:text-xs uppercase tracking-widest text-slate mt-1">Seconds</div>
           </div>
@@ -127,7 +193,7 @@
 
     <div class="grid md:grid-cols-3 gap-5 mb-5">
       <!-- Basecamp -->
-      <div class="fade-up bg-white rounded-3xl border border-charcoal/10 p-7 shadow-sm flex flex-col">
+      <div class="fade-up lift bg-white rounded-3xl border border-charcoal/10 p-7 shadow-sm flex flex-col">
         <div class="w-11 h-11 rounded-2xl bg-sage/15 flex items-center justify-center mb-5">
           <svg class="w-5 h-5 text-sageDeep" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         </div>
@@ -153,7 +219,7 @@
       </div>
 
       <!-- Venmo group -->
-      <div class="fade-up bg-white rounded-3xl border border-charcoal/10 p-7 shadow-sm flex flex-col">
+      <div class="fade-up lift bg-white rounded-3xl border border-charcoal/10 p-7 shadow-sm flex flex-col">
         <div class="w-11 h-11 rounded-2xl bg-sage/15 flex items-center justify-center mb-5">
           <svg class="w-5 h-5 text-sageDeep" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -169,7 +235,7 @@
       </div>
 
       <!-- Group size -->
-      <div class="fade-up bg-charcoal text-linen rounded-3xl p-7 shadow-sm flex flex-col justify-center">
+      <div class="fade-up lift bg-charcoal text-linen rounded-3xl p-7 shadow-sm flex flex-col justify-center">
         <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">The Crew</p>
         <div class="font-display text-6xl font-600 leading-none">14</div>
         <p class="text-sm text-linen/70 mt-3 leading-relaxed">
@@ -180,8 +246,10 @@
   </section>
 
   <!-- ===================== ITINERARY ===================== -->
-  <section id="itinerary" class="bg-linen2 grain border-y border-charcoal/10">
-    <div class="max-w-4xl mx-auto px-5 py-20 md:py-28">
+  <section id="itinerary" class="relative bg-linen2 grain">
+    <!-- top wave (linen above → linen2 band) -->
+    <svg class="wave-divider rotate-180 -mb-px" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,24 C240,48 480,0 720,16 C960,32 1200,48 1440,20 L1440,48 L0,48 Z" fill="rgb(var(--c-linen))"/></svg>
+    <div class="max-w-4xl mx-auto px-5 pb-20 md:pb-28 pt-4">
       <div class="fade-up text-center mb-14">
         <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Thursday → Sunday</p>
         <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">The Itinerary</h2>
@@ -191,6 +259,8 @@
       </div>
       <div id="itinerary-root" class="space-y-12"><!-- injected by JS --></div>
     </div>
+    <!-- bottom wave (linen2 band → linen below) -->
+    <svg class="wave-divider -mt-px" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,24 C240,48 480,0 720,16 C960,32 1200,48 1440,20 L1440,0 L0,0 Z" fill="rgb(var(--c-linen))"/></svg>
   </section>
 
 <section id="extras" class="max-w-3xl mx-auto px-5 py-20 md:py-28">
@@ -364,6 +434,59 @@
   <!-- ========================================================= -->
   <script>
   /* -------------------------------------------------------------
+     0a. SCROLL PROGRESS BAR
+     ------------------------------------------------------------- */
+  (function () {
+    const bar = document.getElementById('scroll-progress');
+    if (!bar) return;
+    let ticking = false;
+    function update() {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      bar.style.width = pct + '%';
+      ticking = false;
+    }
+    addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  })();
+
+  /* -------------------------------------------------------------
+     0b. AFTER-HOURS (NIGHT) THEME TOGGLE
+     ------------------------------------------------------------- */
+  (function () {
+    const root = document.documentElement;
+    const btn  = document.getElementById('theme-toggle');
+    const KEY  = 'jimmy-mtl-theme';
+    const sun  = btn && btn.querySelector('.theme-icon-sun');
+    const moon = btn && btn.querySelector('.theme-icon-moon');
+
+    function apply(night) {
+      root.classList.toggle('night', night);
+      if (sun)  sun.classList.toggle('hidden', night);
+      if (moon) moon.classList.toggle('hidden', !night);
+      if (btn)  btn.setAttribute('aria-pressed', String(night));
+    }
+
+    // Saved preference wins; otherwise follow the OS setting.
+    let saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (_) {}
+    const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+    apply(saved ? saved === 'night' : prefersDark);
+
+    // Enable color transitions only after first paint (avoids load flash).
+    requestAnimationFrame(() => root.classList.add('theme-ready'));
+
+    if (btn) btn.addEventListener('click', () => {
+      const night = !root.classList.contains('night');
+      apply(night);
+      try { localStorage.setItem(KEY, night ? 'night' : 'day'); } catch (_) {}
+    });
+  })();
+
+  /* -------------------------------------------------------------
      1. COUNTDOWN  →  Targeting: August 13-16, 2026
      ------------------------------------------------------------- */
   (function () {
@@ -520,7 +643,7 @@
           ${d.events.map(e => `
             <div class="relative">
               <span class="absolute -left-[34px] top-1.5 w-3.5 h-3.5 rounded-full ${dotTone} ring-4 ring-linen2"></span>
-              <div class="bg-white rounded-2xl border border-charcoal/10 p-5 shadow-sm">
+              <div class="lift bg-white rounded-2xl border border-charcoal/10 p-5 shadow-sm">
                 <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
                   <span class="text-sm font-bold text-sageDeep tabular-nums">${e.time}</span>
                   <h4 class="font-display text-xl font-600 text-ink">${e.title}</h4>
@@ -529,7 +652,7 @@
                   <p class="text-xs uppercase tracking-wide text-slate">${e.loc}</p>
                   ${e.map ? `
                     <a href="${e.map}" target="_blank" rel="noopener" aria-label="Open ${e.title} in Google Maps"
-                       class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-sage/15 text-sageDeep hover:bg-sage/30 transition shrink-0">
+                       class="pin-link inline-flex items-center justify-center w-6 h-6 rounded-full bg-sage/15 text-sageDeep hover:bg-sage/30 transition shrink-0">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </a>` : ''}
                 </div>
