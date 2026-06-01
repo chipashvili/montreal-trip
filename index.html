@@ -248,27 +248,24 @@
         </p>
       </div>
       
-      <div class="fade-up flex flex-col items-center">
-        <!-- Scoreboard -->
+<div class="fade-up flex flex-col items-center w-full">
         <div class="mb-4 flex justify-between w-full max-w-[400px] px-2">
           <span class="font-display text-xl text-sage">Score: <span id="snake-score">0</span></span>
           <span class="font-display text-xl text-slate">High: <span id="snake-high">0</span></span>
         </div>
         
-        <!-- Game Canvas -->
-        <canvas id="snake-board" width="400" height="400" class="bg-ink border-2 border-sage/30 rounded-xl shadow-lg touch-none"></canvas>
+        <canvas id="snake-board" width="400" height="400" class="w-full max-w-[400px] aspect-square bg-ink border-2 border-sage/30 rounded-xl shadow-lg touch-none"></canvas>
         
-        <!-- Mobile Controls -->
-        <div class="mt-8 grid grid-cols-3 gap-2 w-56 md:hidden">
+        <div class="mt-8 grid grid-cols-3 gap-3 w-full max-w-[280px] md:hidden">
           <div></div>
-          <button id="btn-up" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">⬆️</button>
+          <button id="btn-up" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬆️</button>
           <div></div>
-          <button id="btn-left" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">⬅️</button>
-          <button id="btn-down" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">⬇️</button>
-          <button id="btn-right" class="bg-linen/10 py-5 rounded-lg active:bg-sage/50 text-2xl flex items-center justify-center shadow-sm border border-linen/5">➡️</button>
+          <button id="btn-left" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬅️</button>
+          <button id="btn-down" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">⬇️</button>
+          <button id="btn-right" class="bg-linen/10 aspect-square rounded-2xl active:bg-sage/50 text-3xl flex items-center justify-center shadow-sm border border-linen/5 transition-colors">➡️</button>
         </div>
         
-        <button id="start-snake" class="mt-8 text-sm font-semibold px-8 py-3 rounded-full bg-sage text-charcoal hover:bg-linen transition">
+        <button id="start-snake" class="mt-8 text-sm font-semibold px-8 py-4 rounded-full bg-sage text-charcoal hover:bg-linen transition w-full max-w-[280px] md:max-w-xs">
           Start Game
         </button>
       </div>
@@ -869,7 +866,7 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#F4F1EA';
         ctx.font = 'bold 36px "Cormorant Garamond"';
-        ctx.fillText('Dead.', canvas.width/2, canvas.height/2 - 10);
+        ctx.fillText('You fucking died.', canvas.width/2, canvas.height/2 - 10);
         ctx.font = '16px "Inter"';
         ctx.fillStyle = '#8A9A82';
         ctx.fillText(`Final Score: ${score}`, canvas.width/2, canvas.height/2 + 25);
