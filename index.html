@@ -746,8 +746,8 @@
     { min: 0, title: "Acquaintance",      desc: "...Are you sure you're at the right bachelor party? Stick close this weekend." },
   ];
   
-  /* -------------------------------------------------------------
-     7. HUNGRY JIMMY SNAKE GAME (Bulletproof Image Load)
+/* -------------------------------------------------------------
+     7. HUNGRY JIMMY SNAKE GAME (Chunky 16x16 Grid)
      ------------------------------------------------------------- */
   (function() {
     const canvas = document.getElementById('snake-board');
@@ -757,7 +757,6 @@
     const scoreEl = document.getElementById('snake-score');
     const highEl = document.getElementById('snake-high');
 
-    // Pre-load Jimmy's face with safety fallbacks
     const jimmyImg = new Image();
     let imgReady = false;
     jimmyImg.onload = () => { imgReady = true; };
@@ -767,7 +766,8 @@
     const JIMMY_FACE_FALLBACK = '🧔🏻‍♂️'; 
     const FOOD_ITEMS = ['🍺', '🍄', '🍃', '🥃', '🌮', '🚬', '🥡'];
 
-    const box = 20; // grid size
+    // 1. INCREASED BOX SIZE (400px / 25 = 16 squares wide)
+    const box = 25; 
     let snake = [];
     let d;
     let food;
@@ -778,7 +778,8 @@
 
     function init() {
       snake = [];
-      snake[0] = { x: 9 * box, y: 10 * box };
+      // 2. ADJUSTED STARTING POSITION FOR NEW GRID
+      snake[0] = { x: 7 * box, y: 8 * box }; 
       score = 0;
       scoreEl.innerText = score;
       d = null; 
@@ -787,8 +788,9 @@
 
     function spawnFood() {
       food = {
-        x: Math.floor(Math.random() * 19) * box,
-        y: Math.floor(Math.random() * 19) * box,
+        // 3. ADJUSTED SPAWN BOUNDARIES (0 to 15)
+        x: Math.floor(Math.random() * 16) * box,
+        y: Math.floor(Math.random() * 16) * box,
         icon: FOOD_ITEMS[Math.floor(Math.random() * FOOD_ITEMS.length)]
       };
     }
@@ -819,11 +821,9 @@
     bindBtn('btn-right', 'RIGHT', 'LEFT');
 
     function draw() {
-      // Clear board
       ctx.fillStyle = '#1C1E20';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw Grid
       ctx.strokeStyle = 'rgba(255,255,255,0.02)';
       for(let i=0; i<400; i+=box) {
         ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,400); ctx.stroke();
@@ -832,11 +832,11 @@
 
       for (let i = 0; i < snake.length; i++) {
         if (i == 0) { 
-          // Draw image if loaded, otherwise draw emoji
           if (imgReady) {
             ctx.drawImage(jimmyImg, snake[i].x, snake[i].y, box, box);
           } else {
-            ctx.font = '22px Arial';
+            // 4. INCREASED FALLBACK EMOJI FONT SIZE
+            ctx.font = '26px Arial'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(JIMMY_FACE_FALLBACK, snake[i].x + box/2, snake[i].y + box/2);
@@ -849,8 +849,8 @@
         }
       }
 
-      // Draw Food
-      ctx.font = '20px Arial';
+      // 5. INCREASED FOOD FONT SIZE
+      ctx.font = '24px Arial'; 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(food.icon, food.x + box/2, food.y + box/2);
@@ -863,7 +863,6 @@
       if (d == 'RIGHT') snakeX += box;
       if (d == 'DOWN') snakeY += box;
 
-      // Eat food
       if (snakeX == food.x && snakeY == food.y) {
         score++;
         scoreEl.innerText = score;
@@ -879,7 +878,6 @@
 
       let newHead = { x: snakeX, y: snakeY };
 
-      // Game over rules
       if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
         clearInterval(gameInterval);
         gameInterval = null;
@@ -908,12 +906,16 @@
     startBtn.addEventListener('click', () => {
       init();
       startBtn.innerText = "Playing...";
-      window.scrollTo({ top: document.getElementById('game').offsetTop, behavior: 'smooth' });
+      
+      const drawer = document.getElementById('game-drawer');
+      if (drawer) {
+        window.scrollTo({ top: drawer.offsetTop, behavior: 'smooth' });
+      }
+      
       if (gameInterval) clearInterval(gameInterval);
       gameInterval = setInterval(draw, 120);
     });
 
-    // Draw initial blank state
     ctx.fillStyle = '#1C1E20';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#54606B';
@@ -922,7 +924,7 @@
     ctx.textBaseline = 'middle';
     ctx.fillText('Hit Start to Feed Jimmy', canvas.width/2, canvas.height/2);
 
-  })();  </script>
+  })(); </script>
 
 </body>
 </html>
