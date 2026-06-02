@@ -228,6 +228,11 @@
             Directions
           </a>
         </div>
+
+        <!-- House access — wifi + door code. Values live in the BASECAMP
+             object in the editable block at the bottom of the file.
+             Rows render a muted "coming soon" state until filled in. -->
+        <div id="house-access" class="mt-5 pt-5 border-t border-charcoal/10 grid gap-2.5"><!-- injected by JS --></div>
       </div>
 
       <!-- Venmo group -->
@@ -958,7 +963,70 @@
   })();
 
   /* -------------------------------------------------------------
-     7. SCROLL REVEAL
+     7. HOUSE ACCESS — wifi + door code (tap to copy)
+     ------------------------------------------------------------- */
+  function initHouseAccess() {
+    const root = document.getElementById('house-access');
+    if (!root) return;
+    const data = (typeof BASECAMP !== 'undefined') ? BASECAMP : {};
+
+    const wifiIcon = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M5.05 12.464a9.5 9.5 0 0113.9 0M1.394 8.46a14.5 14.5 0 0121.213 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>';
+    const lockIcon = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path stroke-linecap="round" d="M8 11V8a4 4 0 118 0v3"/></svg>';
+
+    const rows = [
+      { key: 'wifi',     icon: wifiIcon, label: 'WiFi password', value: data.wifi,     net: data.wifiNetwork },
+      { key: 'doorCode', icon: lockIcon, label: 'Door code',     value: data.doorCode },
+    ];
+
+    root.innerHTML = rows.map(r => {
+      const filled = r.value && String(r.value).trim().length;
+      const sub = r.key === 'wifi' && r.net ? `<span class="block text-[11px] text-slate/70">network · ${r.net}</span>` : '';
+      if (!filled) {
+        return `
+          <div class="flex items-center gap-3 rounded-2xl border border-dashed border-charcoal/15 bg-linen2/40 px-4 py-3">
+            <span class="text-slate/50 shrink-0">${r.icon}</span>
+            <span class="flex-1">
+              <span class="block text-xs uppercase tracking-wide text-slate font-semibold">${r.label}</span>
+              <span class="block text-sm text-slate/50 italic">coming soon</span>
+            </span>
+          </div>`;
+      }
+      return `
+        <button type="button" data-copy="${String(r.value).replace(/"/g,'&quot;')}" data-label="${r.label}"
+          class="copy-row group flex items-center gap-3 rounded-2xl border border-charcoal/10 bg-linen2/60 px-4 py-3 text-left hover:border-sageDeep/40 transition">
+          <span class="text-sageDeep shrink-0">${r.icon}</span>
+          <span class="flex-1 min-w-0">
+            <span class="block text-xs uppercase tracking-wide text-slate font-semibold">${r.label}</span>
+            <span class="block font-mono text-sm text-ink truncate">${r.value}</span>
+            ${sub}
+          </span>
+          <span class="copy-state text-[11px] font-semibold uppercase tracking-wide text-slate/60 group-hover:text-sageDeep shrink-0">Copy</span>
+        </button>`;
+    }).join('');
+
+    root.addEventListener('click', async e => {
+      const btn = e.target.closest('.copy-row');
+      if (!btn) return;
+      const state = btn.querySelector('.copy-state');
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        state.textContent = 'Copied!';
+        state.classList.add('text-sageDeep');
+        setTimeout(() => { state.textContent = 'Copy'; }, 1500);
+      } catch (_) {
+        state.textContent = 'Select & copy';
+        setTimeout(() => { state.textContent = 'Copy'; }, 1800);
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHouseAccess);
+  } else {
+    initHouseAccess();
+  }
+
+  /* -------------------------------------------------------------
+     8. SCROLL REVEAL
      ------------------------------------------------------------- */
   (function () {
     const io = new IntersectionObserver(entries => {
@@ -973,6 +1041,17 @@
   <!-- ===========  Edit the roster and trivia here.    ========= -->
   <!-- ========================================================= -->
   <script>
+  /* BASECAMP — house access shown in the Basecamp card.
+     Leave a value as '' (empty) to show a muted "coming soon" row.
+     Fill it in and it becomes a tap-to-copy chip.
+     NOTE: the door code is sensitive — make the repo private before
+     committing a real value (see note from setup). */
+  const BASECAMP = {
+    wifiNetwork: '',   // e.g. 'Plateau-5G'  (optional, shown as subtext)
+    wifi:        '',   // e.g. 'maple-syrup-2026'
+    doorCode:    '',   // e.g. '4815'
+  };
+
   /* CREW ROSTER — flip-through rolodex.
      • name : shown big under the photo
      • line : the funny one-liner
@@ -995,43 +1074,67 @@
     { name: 'Will C',  photo: '', line: 'Add a funny line here.' },
   ];
 
+  /* TRIVIA — "How Well Do You Know Jimmy?"
+     • q       : the question
+     • options : 4 choices
+     • answer  : index (0-3) of the correct option
+     • note    : one-liner shown after answering (the punchline)
+     Anything tagged  EDIT:  is a placeholder — swap in the real answer
+     and tweak the options so the truth isn't always obvious. */
   const QUIZ = [
     {
-      q: "Where did Jimmy and Morgan first meet?",
-      options: ["A wedding", "College orientation", "A dating app", "At work"],
-      answer: 2,
-      note: "ayo.",
-    },
-    {
-      q: "What's Jimmy's go-to drink order?",
-      options: ["Guinness", "Light beer, always", "Espresso martini", "Appletini"],
-      answer: 0,
-      note: "he does love the appletini's tho",
-    },
-    {
-      q: "Which of these has Jimmy genuinely never done?",
-      options: ["Run a half marathon", "Gone skydiving", "Dishonored his ancestors", "Sung karaoke sober"],
-      answer: 3,
-      note: "ayoo",
-    },
-    {
-      q: "What's Jimmy's most-quoted movie?",
-      options: ["The Departed", "Step Brothers", "Gladiator", "The Office (not a movie, but he'll argue)"],
+      q: "How did Jimmy and Morgan actually meet?",
+      // EDIT: set `answer` to the true option and rewrite the decoys to be believable.
+      options: ["Mutual friend's party", "A dating app", "College", "Through work"],
       answer: 1,
-      note: "Step Brothers — he can recite the whole thing.",
+      note: "EDIT: drop the real (ideally embarrassing) version of the story here.",
     },
     {
-      q: "What's the one thing Jimmy will absolutely forget to pack?",
-      options: ["His phone", "His passport", "A charger", "His chill"],
+      q: "Order a round for Jimmy — what's he actually drinking?",
+      // EDIT: confirm his real go-to.
+      options: ["Guinness", "Whatever's cheapest", "Espresso martini", "An appletini, unironically"],
+      answer: 0,
+      note: "EDIT: confirm the order — and yes, note the appletini phase.",
+    },
+    {
+      q: "Which of these has Jimmy genuinely NEVER done?",
+      options: ["Run a half marathon", "Gone skydiving", "Cooked a meal start to finish", "Sung karaoke sober"],
+      answer: 3,
+      note: "He has never, in recorded history, done karaoke sober. This weekend is a threat to that record.",
+    },
+    {
+      q: "Quote it back to him and he'll finish the scene. Jimmy's most-quoted movie?",
+      options: ["The Departed", "Step Brothers", "Gladiator", "Anchorman"],
+      answer: 1,
+      note: "Step Brothers. He can — and will — recite the entire thing unprompted.",
+    },
+    {
+      q: "It's 8:55 and the reservation is at 9. Where is Jimmy?",
+      // EDIT: pick whichever is most true-to-life and rewrite the rest.
+      options: ["Already there, annoyed", "Still in the shower", "\"Five minutes out\" (he is not)", "Lost, no phone charge"],
       answer: 2,
-      note: "Always the charger. Someone bring a spare.",
+      note: "EDIT: insert the most accurate Jimmy-is-late excuse.",
+    },
+    {
+      q: "What will Jimmy absolutely forget to pack for Montreal?",
+      options: ["His phone", "His passport", "His charger", "His chill"],
+      answer: 2,
+      note: "The charger. Every trip. Someone bring a spare — and guard your outlets.",
+    },
+    {
+      q: "Pick the one that is a 100% true Jimmy fact.",
+      // EDIT: replace with one real, weird, verifiable fact about Jimmy (and 3 plausible lies).
+      options: ["EDIT: real weird fact", "EDIT: plausible lie", "EDIT: plausible lie", "EDIT: plausible lie"],
+      answer: 0,
+      note: "EDIT: explain the true one. Bonus points if nobody believed it.",
     },
   ];
 
   const RANKS = [
-    { min: 5, title: "Best Man Material", desc: "Flawless. You know Jimmy better than he knows himself. The toast is yours." },
-    { min: 3, title: "Solid Friend",      desc: "Respectable showing. You've clearly put in the years. Buy him a round." },
-    { min: 0, title: "Acquaintance",      desc: "...Are you sure you're at the right bachelor party? Stick close this weekend." },
+    { min: 7, title: "Best Man Material", desc: "Flawless. You know Jimmy better than he knows himself. The toast is yours — try not to cry." },
+    { min: 5, title: "Ride or Die",       desc: "Nearly perfect. You've logged the years and the late-night phone calls. Solid." },
+    { min: 3, title: "Solid Friend",      desc: "Respectable. You know the broad strokes. Buy him a round and brush up before the speeches." },
+    { min: 0, title: "...Wedding Crasher?", desc: "Are you sure you're at the right bachelor party? Stick close to the group this weekend." },
   ];
   
 /* -------------------------------------------------------------
