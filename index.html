@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <title>Jimmy's Montreal Bachelor Party · Aug 13–16</title>
   <link rel="icon" type="image/png" href="jimmy.png" />
-  <meta name="description" content="Itinerary, logistics, and trivia for Jimmy's Montreal bachelor party, August 13–16." />
+  <meta name="description" content="Itinerary and logistics for Jimmy's Montreal bachelor party, August 13–16." />
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -82,10 +82,6 @@
       .fade-up { opacity: 1 !important; transform: none !important; }
     }
 
-    /* ---- Quiz answer states ---- */
-    .opt-correct   { border-color:#5F7059 !important; background:#E7EDE3 !important; color:#3C4A37 !important; }
-    .opt-wrong     { border-color:#B4524A !important; background:#F3E2E0 !important; color:#7A2E29 !important; }
-    .opt-disabled  { opacity:.55; cursor:not-allowed; }
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
     details[open] .chev { transform: rotate(180deg); }
@@ -169,7 +165,7 @@
         <span class="italic text-sageDeep">Bachelor Party</span>
       </h1>
       <p class="mt-6 text-base md:text-lg text-slate max-w-xl mx-auto">
-        Four days. Fourteen fellas. One last hurrah before the big day.
+        Four days. Twelve fellas. One last hurrah before the big day.
         <span class="whitespace-nowrap font-semibold text-charcoal">August 13 – 16</span>
       </p>
 
@@ -257,7 +253,7 @@
       <button id="crew-open" type="button" aria-haspopup="dialog"
         class="fade-up lift group text-left bg-charcoal text-linen rounded-3xl p-7 shadow-sm flex flex-col justify-center cursor-pointer">
         <p class="text-xs uppercase tracking-[0.3em] text-sage font-semibold mb-3">The Crew</p>
-        <div class="font-display text-6xl font-600 leading-none">14</div>
+        <div class="font-display text-6xl font-600 leading-none">12</div>
         <p class="text-sm text-linen/70 mt-3 leading-relaxed">
           guys, one long weekend. Meet the lineup.
         </p>
@@ -368,37 +364,6 @@
           <div class="flex flex-col md:flex-row md:justify-between pb-1">
             <span class="font-semibold text-charcoal">Where is the best place to dispose of a body?</span>
             <span class="text-sageDeep italic">Quel est le meilleur endroit pour se débarrasser d'un corps ?</span>
-          </div>
-        </div>
-      </details>
-
-      <details class="group bg-white border-b border-charcoal/10">
-        <summary class="flex items-center justify-between p-6 md:p-8 cursor-pointer font-display text-2xl md:text-3xl font-600 text-ink hover:bg-linen/30 transition">
-          <span>Trivia: How well do you know Jimmy?</span>
-          <svg class="chev w-6 h-6 text-sageDeep transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        </summary>
-        <div class="px-6 md:px-8 pb-8">
-          <div class="flex items-center justify-between text-xs text-slate mb-2">
-            <span id="quiz-progress-label">Question 1 of 5</span>
-            <span id="quiz-score-label">Score: 0</span>
-          </div>
-          <div class="w-full h-2 rounded-full bg-linen2 overflow-hidden mb-7">
-            <div id="quiz-bar" class="h-full bg-sageDeep transition-all duration-500" style="width:0%"></div>
-          </div>
-          <div id="quiz-stage">
-            <h3 id="quiz-question" class="font-display text-2xl md:text-3xl font-600 text-ink mb-6">…</h3>
-            <div id="quiz-options" class="space-y-3"></div>
-            <div class="mt-6 flex items-center justify-between">
-              <p id="quiz-feedback" class="text-sm font-medium"></p>
-              <button id="quiz-next" class="hidden text-sm font-semibold px-6 py-3 rounded-full bg-charcoal text-linen hover:bg-ink transition">Next →</button>
-            </div>
-          </div>
-          <div id="quiz-results" class="hidden text-center py-6">
-            <p class="text-xs uppercase tracking-[0.3em] text-slate mb-3">Final Verdict</p>
-            <div id="quiz-final-score" class="font-display text-7xl font-600 text-sageDeep">0/5</div>
-            <h3 id="quiz-rank" class="font-display text-3xl font-600 text-ink mt-4">—</h3>
-            <p id="quiz-rank-desc" class="text-sm text-slate mt-2 max-w-sm mx-auto"></p>
-            <button id="quiz-restart" class="mt-8 text-sm font-semibold px-6 py-3 rounded-full border border-charcoal/20 text-charcoal hover:bg-linen2 transition">Try Again</button>
           </div>
         </div>
       </details>
@@ -778,94 +743,7 @@
   })();
 
   /* -------------------------------------------------------------
-     5. TRIVIA QUIZ
-     ------------------------------------------------------------- */
-  (function () {
-    let idx = 0, score = 0, locked = false;
-    const $ = id => document.getElementById(id);
-    const stage = $('quiz-stage'), results = $('quiz-results');
-
-    function loadQuestion() {
-      locked = false;
-      const q = QUIZ[idx];
-      $('quiz-progress-label').textContent = `Question ${idx + 1} of ${QUIZ.length}`;
-      $('quiz-score-label').textContent = `Score: ${score}`;
-      $('quiz-bar').style.width = `${(idx / QUIZ.length) * 100}%`;
-      $('quiz-question').textContent = q.q;
-      $('quiz-feedback').textContent = '';
-      $('quiz-next').classList.add('hidden');
-
-      $('quiz-options').innerHTML = q.options.map((opt, i) => `
-        <button data-i="${i}"
-          class="opt w-full text-left px-5 py-4 rounded-2xl border-2 border-charcoal/15 bg-linen hover:border-sageDeep/50 transition font-medium text-charcoal">
-          ${opt}
-        </button>`).join('');
-    }
-
-    $('quiz-options').addEventListener('click', e => {
-      const btn = e.target.closest('button.opt');
-      if (!btn || locked) return;
-      locked = true;
-      const chosen = +btn.dataset.i;
-      const q = QUIZ[idx];
-      const correct = q.answer;
-      const buttons = [...document.querySelectorAll('#quiz-options .opt')];
-
-      buttons.forEach((b, i) => {
-        b.classList.add('opt-disabled');
-        if (i === correct) b.classList.add('opt-correct');
-        if (i === chosen && chosen !== correct) b.classList.add('opt-wrong');
-      });
-
-      const fb = $('quiz-feedback');
-      if (chosen === correct) {
-        score++;
-        fb.textContent = '✓ ' + (q.note || 'Correct!');
-        fb.className = 'text-sm font-medium text-sageDeep';
-      } else {
-        fb.textContent = '✗ ' + (q.note || 'Not quite.');
-        fb.className = 'text-sm font-medium text-[#B4524A]';
-      }
-      $('quiz-score-label').textContent = `Score: ${score}`;
-      $('quiz-bar').style.width = `${((idx + 1) / QUIZ.length) * 100}%`;
-      $('quiz-next').classList.remove('hidden');
-      $('quiz-next').textContent = idx + 1 < QUIZ.length ? 'Next →' : 'See Results →';
-    });
-
-    $('quiz-next').addEventListener('click', () => {
-      idx++;
-      if (idx < QUIZ.length) loadQuestion();
-      else showResults();
-    });
-
-    function showResults() {
-      stage.classList.add('hidden');
-      results.classList.remove('hidden');
-      $('quiz-bar').style.width = '100%';
-      $('quiz-final-score').textContent = `${score}/${QUIZ.length}`;
-      const r = RANKS.find(r => score >= r.min) || RANKS[RANKS.length - 1];
-      $('quiz-rank').textContent = r.title;
-      $('quiz-rank-desc').textContent = r.desc;
-    }
-
-    $('quiz-restart').addEventListener('click', () => {
-      idx = 0; score = 0;
-      results.classList.add('hidden');
-      stage.classList.remove('hidden');
-      loadQuestion();
-    });
-
-    // QUIZ data is defined in the editable block lower in the file,
-    // so wait until the whole document has parsed before first render.
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadQuestion);
-    } else {
-      loadQuestion();
-    }
-  })();
-
-  /* -------------------------------------------------------------
-     6. CREW ROLODEX
+     5. CREW ROLODEX
      ------------------------------------------------------------- */
   (function () {
     const modal    = document.getElementById('crew-modal');
@@ -1034,8 +912,8 @@
   </script>
 
   <!-- ========================================================= -->
-  <!-- ===========  EDITABLE CONTENT (crew + quiz + ranks)  ===== -->
-  <!-- ===========  Edit the roster and trivia here.    ========= -->
+  <!-- ===========  EDITABLE CONTENT (basecamp + crew)  ======== -->
+  <!-- ===========  Edit the house info and roster here. ======== -->
   <!-- ========================================================= -->
   <script>
   /* BASECAMP — house access shown in the Basecamp card.
@@ -1060,82 +938,17 @@
     { name: 'Alex',    photo: 'faces/alex.jpg', line: 'going through a Goth phase' },
     { name: 'Cullan',  photo: 'faces/cullan.jpg', line: 'big fan of six seven' },
     { name: 'Dan',     photo: 'faces/dan.jpg', line: 'do not give him a ciggie under any circumstance' },
-    { name: 'David',   photo: '', line: 'Add a funny line here.' },
-    { name: 'Harrison',photo: '', line: 'Add a funny line here.' },
+    { name: 'David',   photo: 'faces/David.png', line: 'higher than redman at reggae fest' },
+    { name: 'Harrison',photo: 'faces/Harrison.jpeg', line: 'Will steal your baby' },
     { name: 'Jeremy',  photo: 'faces/yerm.jpg', line: 'AKA Dr. Yerm.' },
     { name: 'Johnny',  photo: 'faces/johnny.jpg', line: 'only coming to eat croissants' },
-    { name: 'Jon',     photo: 'faces/jon.jpg', line: 'just a really nice guy all around' },
-    { name: 'Parker',  photo: '', line: 'Add a funny line here.' },
-    { name: 'William', photo: '', line: 'Add a funny line here.' },
-    { name: 'Will K',  photo: '', line: 'Add a funny line here.' },
-    { name: 'Will C',  photo: '', line: 'Add a funny line here.' },
+    { name: 'Parker',  photo: 'faces/Parker.jpeg', line: 'selling crypto ETFs since 2008' },
+    { name: 'William', photo: 'faces/William.jpeg', line: 'your friendly neighborhood serial killer' },
+    { name: 'Will K',  photo: 'faces/willk.jpeg', line: 'a cross between the common grey squirrel and a degenerate macaw' },
   ];
 
-  /* TRIVIA — "How Well Do You Know Jimmy?"
-     • q       : the question
-     • options : 4 choices
-     • answer  : index (0-3) of the correct option
-     • note    : one-liner shown after answering (the punchline)
-     Anything tagged  EDIT:  is a placeholder — swap in the real answer
-     and tweak the options so the truth isn't always obvious. */
-  const QUIZ = [
-    {
-      q: "How did Jimmy and Morgan actually meet?",
-      // EDIT: set `answer` to the true option and rewrite the decoys to be believable.
-      options: ["Mutual friend's party", "A dating app", "College", "Through work"],
-      answer: 1,
-      note: "EDIT: drop the real (ideally embarrassing) version of the story here.",
-    },
-    {
-      q: "Order a round for Jimmy — what's he actually drinking?",
-      // EDIT: confirm his real go-to.
-      options: ["Guinness", "Whatever's cheapest", "Espresso martini", "An appletini, unironically"],
-      answer: 0,
-      note: "EDIT: confirm the order — and yes, note the appletini phase.",
-    },
-    {
-      q: "Which of these has Jimmy genuinely NEVER done?",
-      options: ["Run a half marathon", "Gone skydiving", "Cooked a meal start to finish", "Sung karaoke sober"],
-      answer: 3,
-      note: "He has never, in recorded history, done karaoke sober. This weekend is a threat to that record.",
-    },
-    {
-      q: "Quote it back to him and he'll finish the scene. Jimmy's most-quoted movie?",
-      options: ["The Departed", "Step Brothers", "Gladiator", "Anchorman"],
-      answer: 1,
-      note: "Step Brothers. He can — and will — recite the entire thing unprompted.",
-    },
-    {
-      q: "It's 8:55 and the reservation is at 9. Where is Jimmy?",
-      // EDIT: pick whichever is most true-to-life and rewrite the rest.
-      options: ["Already there, annoyed", "Still in the shower", "\"Five minutes out\" (he is not)", "Lost, no phone charge"],
-      answer: 2,
-      note: "EDIT: insert the most accurate Jimmy-is-late excuse.",
-    },
-    {
-      q: "What will Jimmy absolutely forget to pack for Montreal?",
-      options: ["His phone", "His passport", "His charger", "His chill"],
-      answer: 2,
-      note: "The charger. Every trip. Someone bring a spare — and guard your outlets.",
-    },
-    {
-      q: "Pick the one that is a 100% true Jimmy fact.",
-      // EDIT: replace with one real, weird, verifiable fact about Jimmy (and 3 plausible lies).
-      options: ["EDIT: real weird fact", "EDIT: plausible lie", "EDIT: plausible lie", "EDIT: plausible lie"],
-      answer: 0,
-      note: "EDIT: explain the true one. Bonus points if nobody believed it.",
-    },
-  ];
-
-  const RANKS = [
-    { min: 7, title: "Best Man Material", desc: "Flawless. You know Jimmy better than he knows himself. The toast is yours — try not to cry." },
-    { min: 5, title: "Ride or Die",       desc: "Nearly perfect. You've logged the years and the late-night phone calls. Solid." },
-    { min: 3, title: "Solid Friend",      desc: "Respectable. You know the broad strokes. Buy him a round and brush up before the speeches." },
-    { min: 0, title: "...Wedding Crasher?", desc: "Are you sure you're at the right bachelor party? Stick close to the group this weekend." },
-  ];
-  
 /* -------------------------------------------------------------
-     7. HUNGRY JIMMY SNAKE GAME (Chunky 16x16 Grid)
+     6. HUNGRY JIMMY SNAKE GAME (Chunky 16x16 Grid)
      ------------------------------------------------------------- */
   (function() {
     const canvas = document.getElementById('snake-board');
