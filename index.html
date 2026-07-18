@@ -317,9 +317,6 @@
       <div class="fade-up text-center mb-14">
         <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Thursday → Sunday</p>
         <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">The Itinerary</h2>
-        <p class="text-sm text-slate mt-3 max-w-md mx-auto">
-          Some blocks have an <span class="font-semibold text-sageDeep">Alternative Option</span> — go hard or take it easy.
-        </p>
       </div>
       <div id="itinerary-root" class="space-y-12"><!-- injected by JS --></div>
     </div>
@@ -582,8 +579,7 @@
           map: MAPS + 'La+Banquise+Montreal' },
         { time: '7:00 PM',  title: 'TBD', loc: 'TBD',
           desc: 'activity TBD',
-          map: MAPS + 'Mount+Royal',
-          alt: 'Low-key Plateau exploring — wander Mont-Royal Ave, hit a terrasse, scout dinner spots.' },
+          map: MAPS + 'Mount+Royal' },
         { time: '9:30 PM',  title: 'Dieu du Ciel! Brewpub', loc: 'Laurier Ave W',
           desc: "Montreal's iconic craft brewery. Toast to the groom.",
           map: MAPS + 'Dieu+du+Ciel+Montreal' },
@@ -597,19 +593,17 @@
           map: MAPS + 'Kondiaronk+Belvedere+Mount+Royal+Montreal',
           alt: 'Sleep. No shame.' },
         { time: '2:30 PM',  title: 'Activity TBD', loc: 'TBD',
-          desc: 'activity TBD',
-          alt: 'Old Montreal walking tour — cobblestones, the Old Port, Notre-Dame Basilica.' },
+          desc: 'activity TBD' },
         { time: '6:00 PM',  title: 'Clean Up & Reset', loc: 'Airbnb',
           desc: 'Shower, recharge phones, get sharp.',
           map: MAPS + 'Rue+Saint-Denis+%26+Avenue+Duluth+Montreal',
-          dress: 'Dress code: elevated summer evening wear — think linen shirts & jackets.' },
+          dress: 'Dress code: elevated summer evening wear.' },
         { time: '8:30 PM',  title: "Dinner at Gibby's", loc: "Gibby's · Old Montreal",
           desc: 'classic Old Montreal steakhouse. Show up looking good.',
           map: 'https://www.google.com/maps/place/Gibbys/@45.5013682,-73.5574245,680m/data=!3m3!1e3!4b1!5s0x4cc91a58f4c3f873:0x7cdff0b29a2973b7!4m6!3m5!1s0x4cc91a58f681ece1:0xff29b3a91124d283!8m2!3d45.5013645!4d-73.5548442!16s%2Fg%2F1tgk07mc' },
         { time: '10:30 PM', title: 'Casino de Montréal', loc: "Île Notre-Dame",
           desc: 'Passport required at the door.',
-          map: MAPS + 'Casino+de+Montreal',
-          alt: 'The Coldroom — hidden speakeasy in Old Montreal. Cocktails over chaos.' },
+          map: MAPS + 'Casino+de+Montreal' },
       ],
     },
     {
@@ -617,8 +611,7 @@
       events: [
         { time: '11:30 AM', title: 'Mile-End Food Tour', loc: 'Mile-End',
           desc: 'Bagels, cheese, espresso, and neighborhood history on foot.',
-          map: MAPS + 'Mile+End+Montreal',
-          alt: 'Sleep in + slow coffee at Café Olimpico. Meet the crew at lunch.' },
+          map: MAPS + 'Mile+End+Montreal' },
         { time: '3:00 PM',  title: 'Terrasse St-Ambroise', loc: 'St-Ambroise Brewery Terrasse',
           desc: 'Canal-side beer garden. Regroup, relax, soak up the afternoon sun.',
           map: MAPS + 'Terrasse+St-Ambroise+Montreal' },
@@ -689,7 +682,7 @@
     { id: 'passport', title: 'Passport', critical: true,
       note: 'Border + clubs + casino. A US State ID is NOT guaranteed. Do not skip.' },
     { id: 'evening', title: 'Evening Gear', critical: false,
-      note: 'Linen shirts / a light jacket for dinner at Gibby\'s, plus the casino.' },
+      note: 'A nice going-out outfit suitable for a steakhouse and the casino.' },
     { id: 'casual', title: 'Daytime Casual', critical: false,
       note: 'Athletic wear for archery and hiking. Comfortable walking shoes.' },
     { id: 'sun', title: 'Sun & Weather', critical: false,
