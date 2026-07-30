@@ -191,6 +191,20 @@
           </div>
         </div>
       </div>
+
+      <!-- WEATHER WIDGET -->
+      <div class="mt-10 max-w-xl mx-auto">
+        <div class="bg-white/80 border border-charcoal/10 rounded-2xl p-4 sm:p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3 border-b border-charcoal/10 pb-2">
+            <span id="weather-title" class="text-xs uppercase tracking-[0.2em] text-sageDeep font-semibold">Montreal Trip Forecast</span>
+            <span id="weather-status" class="text-[10px] uppercase tracking-wider text-slate bg-linen2 px-2.5 py-0.5 rounded-full font-medium">Historical Averages</span>
+          </div>
+          <div id="weather-grid" class="grid grid-cols-4 gap-2 text-center">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -227,9 +241,7 @@
           </a>
         </div>
 
-        <!-- House access — wifi + door code. Values live in the BASECAMP
-             object in the editable block at the bottom of the file.
-             Rows render a muted "coming soon" state until filled in. -->
+        <!-- House access -->
         <div id="house-access" class="mt-5 pt-5 border-t border-charcoal/10 grid gap-2.5"><!-- injected by JS --></div>
       </div>
 
@@ -286,7 +298,7 @@
         <!-- photo / face -->
         <div class="relative bg-linen2">
           <div id="crew-photo" class="aspect-square w-full flex items-center justify-center overflow-hidden select-none">
-            <!-- injected by JS: <img> if photo set, else monogram placeholder -->
+            <!-- injected by JS -->
           </div>
           <!-- prev / next arrows -->
           <button id="crew-prev" type="button" aria-label="Previous person"
@@ -303,7 +315,7 @@
         <div class="px-6 py-6 text-center">
           <h3 id="crew-name" class="font-display text-3xl font-600 text-ink leading-tight">—</h3>
           <p id="crew-line" class="text-sm text-slate mt-2 leading-relaxed min-h-[2.5rem]"></p>
-          <p id="crew-count" class="mt-4 text-[11px] uppercase tracking-widest text-slate/70">1 / 14</p>
+          <p id="crew-count" class="mt-4 text-[11px] uppercase tracking-widest text-slate/70">1 / 12</p>
         </div>
       </div>
     </div>
@@ -324,7 +336,7 @@
     <svg class="wave-divider -mt-px" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,24 C240,48 480,0 720,16 C960,32 1200,48 1440,20 L1440,0 L0,0 Z" fill="rgb(var(--c-linen))"/></svg>
   </section>
 
-<section id="extras" class="max-w-3xl mx-auto px-5 py-20 md:py-28">
+  <section id="extras" class="max-w-3xl mx-auto px-5 py-20 md:py-28">
     <div class="fade-up text-center mb-10">
       <p class="text-xs uppercase tracking-[0.3em] text-sageDeep font-semibold mb-3">Time Killers & Tools</p>
       <h2 class="font-display text-4xl md:text-5xl font-600 text-ink">The Montreal Modules</h2>
@@ -448,7 +460,7 @@
   </footer>
 
   <!-- ========================================================= -->
-  <!-- =====================  JAVASCRIPT  ======================= -->
+  <!-- ===================== JAVASCRIPT ======================= -->
   <!-- ========================================================= -->
   <script>
   /* -------------------------------------------------------------
@@ -488,13 +500,11 @@
       if (btn)  btn.setAttribute('aria-pressed', String(night));
     }
 
-    // Saved preference wins; otherwise follow the OS setting.
     let saved = null;
     try { saved = localStorage.getItem(KEY); } catch (_) {}
     const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
     apply(saved ? saved === 'night' : prefersDark);
 
-    // Enable color transitions only after first paint (avoids load flash).
     requestAnimationFrame(() => root.classList.add('theme-ready'));
 
     if (btn) btn.addEventListener('click', () => {
@@ -505,15 +515,92 @@
   })();
 
   /* -------------------------------------------------------------
+     0c. LIVE WEATHER WIDGET WITH HISTORICAL FALLBACK
+     ------------------------------------------------------------- */
+  (function () {
+    const grid = document.getElementById('weather-grid');
+    const statusEl = document.getElementById('weather-status');
+    if (!grid) return;
+
+    // Historical August averages for Montreal
+    const historical = [
+      { day: 'Thu 13', high: '78°', low: '62°', icon: '☀️' },
+      { day: 'Fri 14', high: '79°', low: '63°', icon: '🌤️' },
+      { day: 'Sat 15', high: '78°', low: '61°', icon: '☀️' },
+      { day: 'Sun 16', high: '77°', low: '60°', icon: '🌤️' }
+    ];
+
+    function renderWeather(days) {
+      grid.innerHTML = days.map(d => `
+        <div class="bg-linen2/50 rounded-xl p-2.5 flex flex-col items-center">
+          <span class="text-[11px] font-semibold text-slate uppercase">${d.day}</span>
+          <span class="text-xl my-1">${d.icon}</span>
+          <span class="font-display text-base font-600 text-ink">${d.high} <span class="text-xs text-slate font-sans">${d.low}</span></span>
+        </div>
+      `).join('');
+    }
+
+    renderWeather(historical);
+
+    // Weather code interpreter for Open-Meteo
+    function parseWmo(code) {
+      if (code === 0) return '☀️';
+      if (code <= 3) return '🌤️';
+      if (code <= 48) return '🌫️';
+      if (code <= 67) return '🌧️';
+      if (code <= 82) return '🌦️';
+      return '🌩️';
+    }
+
+    // Try fetching live forecast if within 7-day API window
+    const targetDate = new Date('2026-08-13T00:00:00');
+    const now = new Date();
+    const daysUntil = (targetDate - now) / (1000 * 60 * 60 * 24);
+
+    if (daysUntil <= 7) {
+      const lat = 45.5017;
+      const lon = -73.5673;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&temperature_unit=fahrenheit&timezone=America%2FNew_York`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (!data || !data.daily) return;
+          const liveDays = [];
+          const labels = ['Thu 13', 'Fri 14', 'Sat 15', 'Sun 16'];
+          
+          for (let i = 0; i < data.daily.time.length; i++) {
+            const dateStr = data.daily.time[i];
+            if (dateStr >= '2026-08-13' && dateStr <= '2026-08-16') {
+              const idx = liveDays.length;
+              liveDays.push({
+                day: labels[idx] || dateStr.slice(8),
+                high: Math.round(data.daily.temperature_2m_max[i]) + '°',
+                low: Math.round(data.daily.temperature_2m_min[i]) + '°',
+                icon: parseWmo(data.daily.weathercode[i])
+              });
+            }
+          }
+
+          if (liveDays.length === 4) {
+            renderWeather(liveDays);
+            statusEl.textContent = 'Live Forecast';
+            statusEl.className = 'text-[10px] uppercase tracking-wider text-sageDeep bg-sage/20 px-2.5 py-0.5 rounded-full font-semibold';
+          }
+        })
+        .catch(() => { /* keep historical default on error */ });
+    }
+  })();
+
+  /* -------------------------------------------------------------
      1. COUNTDOWN  →  Targeting: August 13-16, 2026
      ------------------------------------------------------------- */
   (function () {
-    // Hardcoded dates for the trip
     const tripStart = new Date('August 13, 2026 00:00:00').getTime();
-    const tripEnd   = new Date('August 17, 2026 00:00:00').getTime(); // Triggers at midnight after the 16th
+    const tripEnd   = new Date('August 17, 2026 00:00:00').getTime();
 
     const container = document.getElementById('countdown');
-    const headerText = container.previousElementSibling; // Targets the "Wheels up in" text
+    const headerText = container.previousElementSibling;
 
     const el = {
       d: document.getElementById('cd-days'),
@@ -526,7 +613,6 @@
     function tick() {
       const now = new Date().getTime();
 
-      // 1. AFTER THE TRIP (August 17 and beyond)
       if (now >= tripEnd) {
         headerText.style.display = 'none';
         container.innerHTML = `
@@ -537,7 +623,6 @@
         return;
       }
 
-      // 2. DURING THE TRIP (August 13 - August 16)
       if (now >= tripStart && now < tripEnd) {
          headerText.style.display = 'none';
          container.innerHTML = `
@@ -548,7 +633,6 @@
          return;
       }
 
-      // 3. BEFORE THE TRIP (Standard Countdown)
       const diff = tripStart - now;
       const s = Math.floor(diff / 1000);
       el.d.textContent = pad(Math.floor(s / 86400));
@@ -565,8 +649,6 @@
      2. ITINERARY DATA + RENDER
      ------------------------------------------------------------- */
   const MAPS = 'https://www.google.com/maps/search/?api=1&query=';
-  // Each MAIN event has a `map` Google Maps link rendered as a small pin icon
-  // next to the location. Alternative options intentionally have none.
   const ITINERARY = [
     {
       day: 'Thursday', date: 'August 13', tag: 'Arrival',
@@ -616,8 +698,8 @@
           desc: 'Canal-side beer garden. Regroup, relax, soak up the afternoon sun.',
           map: MAPS + 'Terrasse+St-Ambroise+Montreal' },
         { time: '7:00 PM',  title: "Dinner at Deville Dinerbar", loc: "Deville Dinerbar",
-  desc: "It's like a hip modern take on a 50s diner. More casual than yesterday's dinner.", 
-  map: MAPS + 'Deville+Dinerbar+Montreal' },
+          desc: "It's like a hip modern take on a 50s diner. More casual than yesterday's dinner.",
+          map: MAPS + 'Deville+Dinerbar+Montreal' },
         { time: '10:30 PM', title: 'Nightlife on Boulevard Saint-Laurent', loc: 'The Main',
           desc: "Montreal's nightlife spine. Bars, clubs, late eats. Stick together and pace yourselves.",
           map: MAPS + 'Boulevard+Saint-Laurent+Montreal' },
@@ -753,7 +835,6 @@
 
     function paint() {
       const p = CREW[i];
-      // Photo: real image if provided, otherwise a monogram placeholder.
       photoEl.innerHTML = p.photo
         ? `<img src="${p.photo}" alt="${p.name}" class="w-full h-full object-cover">`
         : `<div class="flex flex-col items-center justify-center text-sageDeep">
@@ -812,7 +893,6 @@
       if (e.key === 'ArrowLeft')   go(-1);
     });
 
-    // Swipe support on the photo area
     let startX = null;
     photoEl.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
     photoEl.addEventListener('touchend', e => {
@@ -898,26 +978,15 @@
   </script>
 
   <!-- ========================================================= -->
-  <!-- ===========  EDITABLE CONTENT (basecamp + crew)  ======== -->
-  <!-- ===========  Edit the house info and roster here. ======== -->
+  <!-- =========== EDITABLE CONTENT (basecamp + crew) ======== -->
   <!-- ========================================================= -->
   <script>
-  /* BASECAMP — house access shown in the Basecamp card.
-     Leave a value as '' (empty) to show a muted "coming soon" row.
-     Fill it in and it becomes a tap-to-copy chip.
-     NOTE: the door code is sensitive — make the repo private before
-     committing a real value (see note from setup). */
   const BASECAMP = {
-    wifiNetwork: '',   // e.g. 'Plateau-5G'  (optional, shown as subtext)
-    wifi:        '',   // e.g. 'maple-syrup-2026'
-    doorCode:    '',   // e.g. '4815'
+    wifiNetwork: '',
+    wifi:        '',
+    doorCode:    '',
   };
 
-  /* CREW ROSTER — flip-through rolodex.
-     • name : shown big under the photo
-     • line : the funny one-liner
-     • photo: path to an image (e.g. 'faces/otto.jpg'). Leave '' for a
-              monogram placeholder until you drop the real photo in. */
   const CREW = [
     { name: 'Jimmy',   photo: 'faces/jimmy.jpg', line: 'The man of the hour.' },
     { name: 'Otto',    photo: 'faces/otto.jpg', line: 'vibe-coded this website' },
@@ -925,16 +994,16 @@
     { name: 'Cullan',  photo: 'faces/cullan.jpg', line: 'big fan of six seven' },
     { name: 'Dan',     photo: 'faces/dan.jpg', line: 'do not give him a ciggie under any circumstance' },
     { name: 'David',   photo: 'faces/David.png', line: 'higher than Redman at reggae fest' },
-    { name: 'Harry',photo: 'faces/Harrison.jpeg', line: 'Will steal your baby' },
+    { name: 'Harry',   photo: 'faces/Harrison.jpeg', line: 'Will steal your baby' },
     { name: 'Jeremy',  photo: 'faces/yerm.jpg', line: 'AKA Dr. Yerm.' },
     { name: 'Johnny',  photo: 'faces/johnny.jpg', line: 'only coming to eat croissants' },
     { name: 'Parker',  photo: 'faces/Parker.jpeg', line: 'a cross between the common grey squirrel and a degenerate macaw' },
     { name: 'William', photo: 'faces/William.jpeg', line: 'your friendly neighborhood serial killer' },
-    { name: 'Willy',  photo: 'faces/Willy.jpeg', line: 'selling crypto ETFs since 2008' },
+    { name: 'Willy',   photo: 'faces/Willy.jpeg', line: 'selling crypto ETFs since 2008' },
   ];
 
-/* -------------------------------------------------------------
-     6. HUNGRY JIMMY SNAKE GAME (Chunky 16x16 Grid)
+  /* -------------------------------------------------------------
+     6. HUNGRY JIMMY SNAKE GAME
      ------------------------------------------------------------- */
   (function() {
     const canvas = document.getElementById('snake-board');
@@ -953,7 +1022,6 @@
     const JIMMY_FACE_FALLBACK = '🧔🏻‍♂️'; 
     const FOOD_ITEMS = ['🍺', '🍄', '🍃', '🥃', '🌮', '🚬', '🥡'];
 
-    // 1. INCREASED BOX SIZE (400px / 25 = 16 squares wide)
     const box = 25; 
     let snake = [];
     let d;
@@ -965,7 +1033,6 @@
 
     function init() {
       snake = [];
-      // 2. ADJUSTED STARTING POSITION FOR NEW GRID
       snake[0] = { x: 7 * box, y: 8 * box }; 
       score = 0;
       scoreEl.innerText = score;
@@ -975,14 +1042,12 @@
 
     function spawnFood() {
       food = {
-        // 3. ADJUSTED SPAWN BOUNDARIES (0 to 15)
         x: Math.floor(Math.random() * 16) * box,
         y: Math.floor(Math.random() * 16) * box,
         icon: FOOD_ITEMS[Math.floor(Math.random() * FOOD_ITEMS.length)]
       };
     }
 
-    // Desktop Keyboard Controls
     document.addEventListener('keydown', direction);
     function direction(event) {
       let key = event.keyCode;
@@ -994,7 +1059,6 @@
       if([37, 38, 39, 40].includes(key) && gameInterval) event.preventDefault();
     }
 
-    // Mobile Button Controls
     const bindBtn = (id, dir, opp) => {
       const btn = document.getElementById(id);
       if(btn) {
@@ -1022,7 +1086,6 @@
           if (imgReady) {
             ctx.drawImage(jimmyImg, snake[i].x, snake[i].y, box, box);
           } else {
-            // 4. INCREASED FALLBACK EMOJI FONT SIZE
             ctx.font = '26px Arial'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -1036,7 +1099,6 @@
         }
       }
 
-      // 5. INCREASED FOOD FONT SIZE
       ctx.font = '24px Arial'; 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -1111,7 +1173,8 @@
     ctx.textBaseline = 'middle';
     ctx.fillText('Hit Start to Feed Jimmy', canvas.width/2, canvas.height/2);
 
-  })(); </script>
+  })(); 
+  </script>
 
 </body>
 </html>
