@@ -464,6 +464,30 @@
   <!-- ========================================================= -->
   <script>
   /* -------------------------------------------------------------
+     0. EDITABLE CONTENT (basecamp + crew) - DECLARED FIRST
+     ------------------------------------------------------------- */
+  const BASECAMP = {
+    wifiNetwork: '',
+    wifi:        '',
+    doorCode:    '',
+  };
+
+  const CREW = [
+    { name: 'Jimmy',   photo: 'faces/jimmy.jpg', line: 'The man of the hour.' },
+    { name: 'Otto',    photo: 'faces/otto.jpg', line: 'vibe-coded this website' },
+    { name: 'Alex',    photo: 'faces/alex.jpg', line: 'going through a Goth phase' },
+    { name: 'Cullan',  photo: 'faces/cullan.jpg', line: 'big fan of six seven' },
+    { name: 'Dan',     photo: 'faces/dan.jpg', line: 'do not give him a ciggie under any circumstance' },
+    { name: 'David',   photo: 'faces/David.png', line: 'higher than Redman at reggae fest' },
+    { name: 'Harry',   photo: 'faces/Harrison.jpeg', line: 'Will steal your baby' },
+    { name: 'Jeremy',  photo: 'faces/yerm.jpg', line: 'AKA Dr. Yerm.' },
+    { name: 'Johnny',  photo: 'faces/johnny.jpg', line: 'only coming to eat croissants' },
+    { name: 'Parker',  photo: 'faces/Parker.jpeg', line: 'a cross between the common grey squirrel and a degenerate macaw' },
+    { name: 'William', photo: 'faces/William.jpeg', line: 'your friendly neighborhood serial killer' },
+    { name: 'Willy',   photo: 'faces/Willy.jpeg', line: 'selling crypto ETFs since 2008' },
+  ];
+
+  /* -------------------------------------------------------------
      0a. SCROLL PROGRESS BAR
      ------------------------------------------------------------- */
   (function () {
@@ -975,32 +999,6 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
   })();
-  </script>
-
-  <!-- ========================================================= -->
-  <!-- =========== EDITABLE CONTENT (basecamp + crew) ======== -->
-  <!-- ========================================================= -->
-  <script>
-  const BASECAMP = {
-    wifiNetwork: '',
-    wifi:        '',
-    doorCode:    '',
-  };
-
-  const CREW = [
-    { name: 'Jimmy',   photo: 'faces/jimmy.jpg', line: 'The man of the hour.' },
-    { name: 'Otto',    photo: 'faces/otto.jpg', line: 'vibe-coded this website' },
-    { name: 'Alex',    photo: 'faces/alex.jpg', line: 'going through a Goth phase' },
-    { name: 'Cullan',  photo: 'faces/cullan.jpg', line: 'big fan of six seven' },
-    { name: 'Dan',     photo: 'faces/dan.jpg', line: 'do not give him a ciggie under any circumstance' },
-    { name: 'David',   photo: 'faces/David.png', line: 'higher than Redman at reggae fest' },
-    { name: 'Harry',   photo: 'faces/Harrison.jpeg', line: 'Will steal your baby' },
-    { name: 'Jeremy',  photo: 'faces/yerm.jpg', line: 'AKA Dr. Yerm.' },
-    { name: 'Johnny',  photo: 'faces/johnny.jpg', line: 'only coming to eat croissants' },
-    { name: 'Parker',  photo: 'faces/Parker.jpeg', line: 'a cross between the common grey squirrel and a degenerate macaw' },
-    { name: 'William', photo: 'faces/William.jpeg', line: 'your friendly neighborhood serial killer' },
-    { name: 'Willy',   photo: 'faces/Willy.jpeg', line: 'selling crypto ETFs since 2008' },
-  ];
 
   /* -------------------------------------------------------------
      6. HUNGRY JIMMY SNAKE GAME
