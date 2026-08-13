@@ -634,39 +634,45 @@
     };
     const pad = n => String(n).padStart(2, '0');
 
+    let timer;
     function tick() {
       const now = new Date().getTime();
 
       if (now >= tripEnd) {
-        headerText.style.display = 'none';
-        container.innerHTML = `
-          <div class="col-span-4 bg-white/70 border border-charcoal/10 rounded-2xl py-8 shadow-sm">
-            <div class="font-display text-3xl md:text-5xl font-600 text-sageDeep">What a weekend. It was nice seeing you boys. 🍻</div>
-          </div>`;
-        clearInterval(timer);
+        if (headerText) headerText.style.display = 'none';
+        if (container) {
+            container.innerHTML = `
+              <div class="col-span-4 bg-white/70 border border-charcoal/10 rounded-2xl py-8 shadow-sm">
+                <div class="font-display text-3xl md:text-5xl font-600 text-sageDeep">What a weekend. It was nice seeing you boys. 🍻</div>
+              </div>`;
+        }
+        if (timer) clearInterval(timer);
         return;
       }
 
       if (now >= tripStart && now < tripEnd) {
-         headerText.style.display = 'none';
-         container.innerHTML = `
-          <div class="col-span-4 bg-sageDeep border border-charcoal/10 rounded-2xl py-8 shadow-sm">
-            <div class="font-display text-3xl md:text-5xl font-600 text-linen">It's time. Let's go. 🇨🇦</div>
-          </div>`;
-         clearInterval(timer);
+         if (headerText) headerText.style.display = 'none';
+         if (container) {
+             container.innerHTML = `
+              <div class="col-span-4 bg-sageDeep border border-charcoal/10 rounded-2xl py-8 shadow-sm">
+                <div class="font-display text-3xl md:text-5xl font-600 text-linen">It's time. Let's go. 🇨🇦</div>
+              </div>`;
+         }
+         if (timer) clearInterval(timer);
          return;
       }
 
       const diff = tripStart - now;
       const s = Math.floor(diff / 1000);
-      el.d.textContent = pad(Math.floor(s / 86400));
-      el.h.textContent = pad(Math.floor((s % 86400) / 3600));
-      el.m.textContent = pad(Math.floor((s % 3600) / 60));
-      el.s.textContent = pad(s % 60);
+      if (el.d) el.d.textContent = pad(Math.floor(s / 86400));
+      if (el.h) el.h.textContent = pad(Math.floor((s % 86400) / 3600));
+      if (el.m) el.m.textContent = pad(Math.floor((s % 3600) / 60));
+      if (el.s) el.s.textContent = pad(s % 60);
     }
     
+    // Initialize timer BEFORE calling tick to avoid ReferenceError
+    timer = setInterval(tick, 1000);
     tick();
-    const timer = setInterval(tick, 1000);
   })();
 
   /* -------------------------------------------------------------
@@ -991,13 +997,34 @@
   }
 
   /* -------------------------------------------------------------
-     8. SCROLL REVEAL
+     8. SCROLL REVEAL (with fail-safe fallback)
      ------------------------------------------------------------- */
   (function () {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+    const revealAll = () => {
+      document.querySelectorAll('.fade-up').forEach(el => el.classList.add('in'));
+    };
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('in');
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.01, rootMargin: '50px' });
+
+      document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+    } else {
+      revealAll();
+    }
+
+    // Fail-safe: Ensure all content is forced visible shortly after load
+    if (document.readyState === 'complete') {
+      setTimeout(revealAll, 300);
+    } else {
+      window.addEventListener('load', () => setTimeout(revealAll, 300));
+    }
   })();
 
   /* -------------------------------------------------------------
